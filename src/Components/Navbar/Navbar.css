@@ -1,0 +1,53 @@
+.content-displayer{
+    display: flex;
+    gap: 110px;
+    flex-direction: row;
+}
+
+.container{
+    display: flex;
+    justify-content: space-between;
+    background-color: gray;
+    height: 80px;
+}
+
+
+.profile-button {
+    background-color: blue;
+    width: 70px;
+    height: 70px;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;           
+    justify-content: center; 
+    align-items: center;    
+}
+
+.profile-div {
+    background-color: red;
+    width: 200px;
+    position: absolute;
+    top: 80px;
+    right: 10px;
+    z-index: 10;
+    padding: 10px;
+    border-radius: 8px;
+    opacity: 0;
+    transform: scale(0.05);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.profile-div.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+.containers h1,h3{
+    cursor: pointer;
+}
+p{
+    color: white;
+}
+

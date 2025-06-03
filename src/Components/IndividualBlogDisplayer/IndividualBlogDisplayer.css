@@ -1,0 +1,200 @@
+.full-blog-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.full-blog-card {
+  background: linear-gradient(145deg, #432c85, #6b4fbb);
+  border-radius: 15px;
+  padding: 30px;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(67, 44, 133, 0.3);
+}
+
+.blog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.blog-title-caps {
+  font-size: 2em;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  flex: 1;
+}
+
+.blog-header-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.blog-date, .heart-icon, .difficulty-level {
+  padding: 8px 16px;
+  background-color: rgba(147, 112, 219, 0.2);
+  border-radius: 20px;
+  font-size: 0.9em;
+  color: #fff;
+}
+
+.heart-icon {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ingredients-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  border-radius: 12px;
+  margin: 30px 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ingredients-section h3 {
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.ingredients-section ul {
+  list-style-type: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.ingredients-section li {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.blog-content {
+  margin: 30px 0;
+}
+
+.content-box {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 25px;
+  border-radius: 12px;
+  line-height: 1.8;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.blog-categories {
+  margin-bottom: 30px;
+}
+
+.categories-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.category-tag {
+  padding: 8px 16px;
+  background-color: rgba(147, 112, 219, 0.2);
+  border-radius: 20px;
+  font-size: 0.9em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.category-tag:hover {
+  background-color: rgba(147, 112, 219, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Comments Section Styles */
+.comments-section {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.comments-section h3 {
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.comment-form {
+  margin-bottom: 30px;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 100px;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1em;
+  resize: vertical;
+  margin-bottom: 15px;
+}
+
+.comment-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.comment-submit-btn {
+  padding: 10px 20px;
+  background: rgba(147, 112, 219, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.comment-submit-btn:hover {
+  background: rgba(147, 112, 219, 0.5);
+  transform: translateY(-2px);
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comment-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comment-user {
+  font-weight: bold;
+  color: #d8bfd8;
+}
+
+.comment-date {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9em;
+}
+
+.comment-text {
+  color: #fff;
+  line-height: 1.6;
+  margin: 0;
+}

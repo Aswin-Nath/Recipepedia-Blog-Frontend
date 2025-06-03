@@ -1,0 +1,127 @@
+.individual-comments {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 2px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: none;
+  color: #242424;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.2s ease;
+}
+
+.individual-comments:hover {
+  background-color: #f9f9f9;
+}
+
+.individual-comments p {
+  margin: 0 0 0.6rem;
+  color: #242424;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.individual-comments h3 {
+  display: inline-block;
+  margin-right: 1rem;
+  font-size: 0.92rem;
+  color: #666;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+.individual-comments h3:hover {
+  text-decoration: underline;
+}
+
+.individual-comments h5 {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: #888;
+  cursor: pointer;
+}
+
+.individual-comments h5:hover {
+  text-decoration: underline;
+}
+
+.individual-comments > p:last-of-type {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: #aaa;
+}
+
+/* Input field styling */
+.custom-input-comment {
+  width: 100%;
+  max-width: 800px;
+  resize: none;
+  padding: 12px 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border 0.2s ease;
+}
+
+.custom-input-comment:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+/* Placeholder */
+.custom-input-comment::placeholder {
+  color: #9e9e9e;
+}
+
+/* Wrappers */
+.comment-input-wrapper,
+.reply-input-wrapper {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.reply-input-wrapper {
+  padding-left: 2rem;
+}
+
+/* Buttons */
+.comment-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancel-btn,
+.respond-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-btn {
+  background-color: #eeeeee;
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background-color: #d6d6d6;
+}
+
+.respond-btn {
+  background-color: #1976d2;
+  color: white;
+}
+
+.respond-btn:hover {
+  background-color: #125ea8;
+}
