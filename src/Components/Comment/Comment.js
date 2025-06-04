@@ -35,8 +35,10 @@ const Comments = ({blog_id, user_id}) => {
     }
   }
 
-  const DisplayComment = ({comment, expandedReplies, setExpandedReplies}) => {
-    const CommentContent = comment.content;
+const DisplayComment = ({comment, expandedReplies, setExpandedReplies}) => {
+  // ...existing state and constants...
+
+      const CommentContent = comment.content;
     const likes = comment.likes;
     const child_array = Parent_to_child.get(comment.comment_id);
     const time = comment.time;
@@ -58,37 +60,83 @@ const Comments = ({blog_id, user_id}) => {
       }
     }
 
-    return (
-      <div className="individual-comments">
+  return (
+    <div className="individual-comments">
+      <div className="comment-header">
+        <div className="comment-user">
+          <div className="user-avatar">
+            {/* You can add user avatar here if available */}
+          </div>
+          <div className="user-info">
+            <h4>{comment.username || "User"}</h4>
+            <span className="comment-date">Created on {Date} at {time}</span>
+          </div>
+        </div>
+        <div className="comment-menu">
+          {/* Optional: Add menu dots here */}
+          <span className="menu-dots">•••</span>
+        </div>
+      </div>
+
+      <div className="comment-body">
         <p>{CommentContent}</p>
-        <h3>❤️ {likes}</h3>
-        <h3 onClick={() => setwant_to_reply(!want_to_reply)}>Reply</h3>
-        <p>Created on {Date} at {time}</p>
-        <h5 onClick={toggleReplies} style={{display: (reply_count > 0) ? "block" : "none"}}>
-          {show_replies ? "hide replies" : `${reply_count} replies`}
-        </h5>
-        {want_to_reply && (
-          <div className="reply-input-wrapper">
-            <textarea
-              value={child_addcomment}
-              onChange={(e) => {
-                setchild_addcomment(e.target.value);
-                e.target.style.height = "auto";
-                e.target.style.height = e.target.scrollHeight + "px";
+      </div>
+
+      <div className="comment-actions">
+        <button className="action-btn">
+          <span>❤️</span>
+          <span>{likes}</span>
+        </button>
+        <button className="action-btn" onClick={() => setwant_to_reply(!want_to_reply)}>
+          Reply
+        </button>
+        {reply_count > 0 && (
+          <button 
+            className="action-btn replies-btn"
+            onClick={toggleReplies}
+          >
+            {show_replies ? "Hide replies" : `${reply_count} replies`}
+          </button>
+        )}
+      </div>
+
+      {want_to_reply && (
+        <div className="reply-input-wrapper">
+          <textarea
+            value={child_addcomment}
+            onChange={(e) => {
+              setchild_addcomment(e.target.value);
+              e.target.style.height = "auto";
+              e.target.style.height = e.target.scrollHeight + "px";
+            }}
+            className="custom-input-comment"
+            placeholder="Write a reply..."
+          />
+          <div className="comment-buttons">
+            <button 
+              className="cancel-btn" 
+              onClick={() => {
+                setchild_addcomment("");
+                setwant_to_reply(false);
               }}
-              className="custom-input-comment"
-              placeholder="share your thoughts about the blog"
-            />
-            <div className="comment-buttons">
-              <button className="cancel-btn" onClick={() => setchild_addcomment("")}>Cancel</button>
-              <button className="respond-btn" onClick={() => {
+            >
+              Cancel
+            </button>
+            <button 
+              className="respond-btn" 
+              onClick={() => {
                 AddComment(child_addcomment, comment.comment_id);
                 setchild_addcomment("");
                 setwant_to_reply(false);
-              }}>Respond</button>
-            </div>
+              }}
+            >
+              Reply
+            </button>
           </div>
-        )}
+        </div>
+      )}
+
+      <div className="nested-replies">
         {reply_count > 0 && show_replies && child_array.map((child_comment) => (
           <DisplayComment 
             key={child_comment.comment_id} 
@@ -98,8 +146,9 @@ const Comments = ({blog_id, user_id}) => {
           />
         ))}
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   const AddComment = async (current_addcomment, parent_id) => {
     if (!current_addcomment) {
@@ -191,4 +240,4 @@ const Comments = ({blog_id, user_id}) => {
   );
 }
 
-export default Comments;
+export default Comments;  

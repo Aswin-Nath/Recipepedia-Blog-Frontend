@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import "./Signup.css"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { useUser } from "../Contexts/ContextProvider";
 const Signup = () => {
+    const {setUserId}=useUser();
     const navigate = useNavigate();
     const [Email, setemail] = useState("");
     const [Password, setpassword] = useState("");
@@ -60,6 +61,7 @@ const Signup = () => {
                             "Content-Type":"application/json"
                         }
                     })
+                    setUserId(insert_response.data.user_id);
                     console.log("INSERTED data",insert_response);
                     navigate("/home");
                 }

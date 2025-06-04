@@ -1,53 +1,119 @@
-.content-displayer{
-    display: flex;
-    gap: 110px;
-    flex-direction: row;
+.containers {
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.container{
+.container {
     display: flex;
     justify-content: space-between;
-    background-color: gray;
-    height: 80px;
+    align-items: center;
+    background: linear-gradient(135deg, #fff, #f8f9fa);
+    height: 70px;
+    padding: 0 2rem;
+    border-bottom: 1px solid #eee;
 }
 
+.content-displayer {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+}
+
+.brand {
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    margin: 0;
+}
+
+.nav-link {
+    color: #444;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+.nav-link:hover {
+    cursor: pointer;
+    color: #0072ff;
+    background-color: rgba(0,114,255,0.1);
+}
 
 .profile-button {
-    background-color: blue;
-    width: 70px;
-    height: 70px;
-    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #0072ff, #00c6ff);
     border-radius: 50%;
     cursor: pointer;
-    display: flex;           
-    justify-content: center; 
-    align-items: center;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,114,255,0.2);
+}
+
+.profile-initial {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .profile-div {
-    background-color: red;
-    width: 200px;
+    background: white;
+    width: 220px;
     position: absolute;
     top: 80px;
-    right: 10px;
+    right: 2rem;
     z-index: 10;
-    padding: 10px;
-    border-radius: 8px;
+    padding: 0.5rem;
+    border-radius: 12px;
     opacity: 0;
-    transform: scale(0.05);
-    transition: opacity 0.2s, transform 0.2s;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border: 1px solid #eee;
 }
 
 .profile-div.show {
     opacity: 1;
-    transform: scale(1);
+    visibility: visible;
+    transform: translateY(0);
 }
 
-
-.containers h1,h3{
+.profile-menu-item {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #444;
+    font-size: 0.95rem;
     cursor: pointer;
-}
-p{
-    color: white;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
+.profile-menu-item:hover {
+    background-color: #f8f9fa;
+    color: #0072ff;
+}
+
+.profile-menu-item i {
+    font-size: 1rem;
+    width: 20px;
+}
+
+/* Add smooth transitions */
+* {
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}

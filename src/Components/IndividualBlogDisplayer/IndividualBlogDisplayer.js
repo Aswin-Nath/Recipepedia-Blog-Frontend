@@ -1,12 +1,21 @@
 import { useLocation } from "react-router-dom";
+import { useState,useEffect } from "react";
 import "./IndividualBlogDisplayer.css";
 import Navbar from "../Navbar/Navbar";
 import Comment from "../Comment/Comment";
+import axios from "axios";
+
 const IndividualBlogDisplayer = () => {
   const { state } = useLocation();
-  const { blog } = state;
-  
+  const { blog } = state; 
 
+
+  const [loaded,setloaded]=useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+
+  const toggleBookmark = () => {
+    setBookmarked(!bookmarked);
+  };
 
   const {
     blog_id,
@@ -18,10 +27,52 @@ const IndividualBlogDisplayer = () => {
     createdat,
     user_id
   } = blog;
+  
+  // Initial Condition API
+  // Update Bookmark API
 
+  useEffect(()=>{
+     const InitialCheck= async()=>{
+      const data={
+        "user_id":user_id,
+        "blog_id":blog_id
+      }
+      const API="http://127.0.0.1:5000/bookmark-checker";
+      try{
+        const response=await axios.post(API,data,{headers:{"Content-Type":"application/json"}})
+        setloaded(true);
+        setBookmarked(response.data.message);
+      }
+      catch(error){
+        console.log("Error occured",error.message);
+      }
+     };
+     InitialCheck();
+     console.log("FIRST CONDITION",bookmarked);
+  },[])
+
+  useEffect(()=>{
+    if(!loaded){
+      return;
+    }
+    const updateBookMark=async ()=>{
+      const data={
+        "user_id":user_id,
+        "blog_id":blog_id,
+        "condition":bookmarked
+      }
+      const API="http://127.0.0.1:5000/bookmark-toggler";
+      try{
+      await axios.post(API,data,{headers:{"Content-Type":"application/json"}})
+      }
+      catch(error){
+        console.log("Error occured",error.message);
+      }
+    }
+    updateBookMark();
+  },[bookmarked])
   const difficultyLevel = "Medium";
 
-  
   return (
     <div>
       <Navbar />
@@ -29,12 +80,48 @@ const IndividualBlogDisplayer = () => {
         <div className="full-blog-card">
           <div className="blog-header">
             <h1 className="blog-title-caps">{title.toUpperCase()}</h1>
-            <div className="blog-header-right">
+            <div className="blog-header-right" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <span className="blog-date">
                 {new Date(createdat).toLocaleDateString()}
               </span>
               <span className="heart-icon">❤️ {likes}</span>
               <span className="difficulty-level">{difficultyLevel}</span>
+
+              <span
+                onClick={toggleBookmark}
+                role="button"
+                title={bookmarked ? "Bookmarked" : "Add to Bookmarks"}
+                aria-label={bookmarked ? "Remove bookmark" : "Add bookmark"}
+                style={{
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  backgroundColor: bookmarked ? "gold" : "white",
+                  transition: "all 0.3s ease",
+                  border: bookmarked ? "2px solid black" : "2px solid #aaa",
+                  boxShadow: bookmarked ? "0 0 8px rgba(0,0,0,0.6)" : "0 0 3px rgba(0,0,0,0.3)",
+                  marginLeft: "8px"
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="22"
+                  viewBox="0 0 14 18"
+                  fill={bookmarked ? "black" : "black"}
+                  stroke={bookmarked ? "black" : "black"}
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M2 1h10v16l-5-3-5 3V1z" />
+                </svg>
+              </span>
+
             </div>
           </div>
 
@@ -61,16 +148,15 @@ const IndividualBlogDisplayer = () => {
           <div className="blog-categories">
             <h3>Categories:</h3>
             <div className="categories-tags">
-              {categories && categories.length > 0 
+              {categories && categories.length > 0
                 ? categories.map((category, idx) => (
-                    <span key={idx} className="category-tag">{category}</span>
-                  ))
+                  <span key={idx} className="category-tag">{category}</span>
+                ))
                 : 'N/A'
               }
             </div>
           </div>
 
-          {/* Comments Section */}
           <Comment blog_id={blog_id} user_id={user_id} />
 
         </div>

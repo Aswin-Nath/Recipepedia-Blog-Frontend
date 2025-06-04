@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
-
+import { useUser } from "../Contexts/ContextProvider";
 const Login = () => {
+    const {setUserId}=useUser();   
     const [user_detail, setdetail] = useState("");
     const [password, setpassword] = useState("");
     const navigate = useNavigate();
-
     const HandleLogin= async ()=>{
         if(!user_detail || !password){
             alert("provide all the details");
@@ -25,9 +25,12 @@ const Login = () => {
                 "Content-Type":"application/json"
             }
         })
+        const user_id=response.data.id;
         const message=response.data.message;
         console.log(message);
         if(message==="user found"){
+            console.log("ID LOGIN",user_id);
+            setUserId(user_id);
             navigate("/home");
         }
         else if(message!=="user not found"){

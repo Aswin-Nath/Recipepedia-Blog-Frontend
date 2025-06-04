@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useState } from "react";
+import { useUser } from "../Contexts/ContextProvider";
 const Navbar=()=>{
+    const {user_id}=useUser();
     const navigate=useNavigate();
     const [show,setshow]=useState(0);
     const toggle=()=>{
@@ -15,25 +17,29 @@ const Navbar=()=>{
         }
     }
     return (
-            <div className="containers">
-                <div className="container">
-                    <div className="content-displayer">
-                        <h1 style={{color:"cyan"}}>Recipepedia</h1>
-                        <h1 style={{color:"blue"}} className="home-button" onClick={()=>{navigate("/home")}}>Home</h1>
-                    </div>
-                    <div onClick={toggle} className="profile-button">
-                        <p>Profile</p>
-                    </div>
-                </div>
-                
-                    {(
-                    <div className={`profile-div ${show === 1 ? "show" : ""}`}>
-                        <h1>View Profile</h1>
-                        <h1>Log out</h1>
-                    </div>
-                    )}
+    <div className="containers">
+        <div className="container">
+            <div className="content-displayer">
+                <h1 className="brand">Recipepedia</h1>
+                <h1 className="nav-link" onClick={() => {navigate("/home",{state:{user_id}})}}>Home</h1>
             </div>
-    )
+            <div onClick={toggle} className="profile-button">
+                <span className="profile-initial">P</span>
+            </div>
+        </div>
+        
+        <div className={`profile-div ${show === 1 ? "show" : ""}`}>
+            <div className="profile-menu-item" onClick={() => navigate("/profile")}>
+                <i className="fas fa-user"></i>
+                <span>View Profile</span>
+            </div>
+            <div className="profile-menu-item">
+                <i className="fas fa-sign-out-alt"></i>
+                <span onClick={()=>{navigate("/login")}}>Log out</span>
+            </div>
+        </div>
+    </div>
+)
 }
 
 export default Navbar;
