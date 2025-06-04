@@ -1,35 +1,39 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
 import { useUser } from "../Contexts/ContextProvider";
 const Login = () => {
-    const {setUserId}=useUser();   
+    const navigate=useNavigate();
+    const {setUserId,userId,loading}=useUser();
+        useEffect(() => {
+            if (userId) {
+            navigate("/home");
+        }
+        }, [userId, loading, navigate]);
     const [user_detail, setdetail] = useState("");
     const [password, setpassword] = useState("");
-    const navigate = useNavigate();
     const HandleLogin= async ()=>{
         if(!user_detail || !password){
             alert("provide all the details");
             return ;
         }
         const API="http://127.0.0.1:5000/is-user-there";
-
-        const data={
+        const data={    
             "detail":user_detail,
             "password":password
         }
-
         const response=await axios.post(API,data,{
             headers:{
                 "Content-Type":"application/json"
             }
         })
+        
         const user_id=response.data.id;
         const message=response.data.message;
-        console.log(message);
+        localStorage.setItem("token",response.data.currentToken);
+        
         if(message==="user found"){
-            console.log("ID LOGIN",user_id);
             setUserId(user_id);
             navigate("/home");
         }
@@ -68,6 +72,7 @@ const Login = () => {
                     <button className="custom-button" onClick={HandleLogin}>
                         Login
                     </button>
+                    
                 </div>
                 <div className="goto-signup">
                     <span>Don't have an account?</span>

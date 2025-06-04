@@ -11,7 +11,6 @@ useEffect(() => {
     try {
       const response = await axios.get(API);
       setblogs(response.data.message);
-      console.log(response.data.message);
     } catch (error) {
       alert("Error occurred: " + error.message);
     }

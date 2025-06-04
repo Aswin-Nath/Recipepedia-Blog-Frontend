@@ -17,7 +17,6 @@ const Signup = () => {
             return;
         }   
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        console.log(Email);
         if(!regex.test(Email)){
             alert("Provide a valid Email address");
             return ;
@@ -28,11 +27,11 @@ const Signup = () => {
             return ;
         }
         const API="http://127.0.0.1:5000/duplicate-user-checker";
+        try{
         const data={
             "username":Username,
             "mail":Email
         }
-        try{
             const response=await axios.post(API,data,{
                 headers:{
                     "Content-Type":"application/json"
@@ -48,31 +47,33 @@ const Signup = () => {
                     alert("Email is already registered try with an alternate email");
                     return ;
                 }
-                console.log("FIRST RESPONSE",mail_check,name_check);
                 const ADD_API="http://127.0.0.1:5000/add-user";
-                try{
-                    const data={
+                const data1={
                         "username":Username,
                         "email":Email,
                         "password":Password
                     }
-                    const insert_response=await axios.post(ADD_API,data,{
+                    const insert_response=await axios.post(ADD_API,data1,{
                         headers:{
                             "Content-Type":"application/json"
                         }
                     })
+                    localStorage.setItem("token",insert_response.data.currentToken);
                     setUserId(insert_response.data.user_id);
-                    console.log("INSERTED data",insert_response);
                     navigate("/home");
                 }
-                catch(err){
-                    alert("Error occured while inserting the user into the db");
-                    console.log("Error occured",err.message);
-                }
-                }
-        catch(err){
-            console.log("Error occured",err.message);
-        }
+        catch (err) {
+            if (err.response) {
+                console.log("Server responded with error:", err.response.data);
+                alert("Server error: " + err.response.data.message);
+            } else if (err.request) {
+                console.log("No response received:", err.request);
+                alert("No response from server.");
+            } else {
+                console.log("Error setting up request:", err.message);
+                alert("Error: " + err.message);
+            }
+            }
 
     }
 

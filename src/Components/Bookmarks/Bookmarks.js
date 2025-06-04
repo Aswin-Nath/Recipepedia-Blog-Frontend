@@ -11,7 +11,6 @@ const Bookmarks = () => {
             try{
                 const response=await axios.post("http://127.0.0.1:5000/bookmark",{"user_id":userId},{headers:{"Content-Type":"application/json"}});
                 setbookmarks(response.data.bookmarks);
-                console.log("BOOKMARKS",response.data.bookmarks);
             }
             catch(error){
                 console.log("Error occured",error);

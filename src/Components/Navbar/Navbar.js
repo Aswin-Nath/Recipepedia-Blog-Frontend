@@ -3,7 +3,7 @@ import "./Navbar.css";
 import { useState } from "react";
 import { useUser } from "../Contexts/ContextProvider";
 const Navbar=()=>{
-    const {user_id}=useUser();
+    const {userId,logout}=useUser();
     const navigate=useNavigate();
     const [show,setshow]=useState(0);
     const toggle=()=>{
@@ -21,7 +21,7 @@ const Navbar=()=>{
         <div className="container">
             <div className="content-displayer">
                 <h1 className="brand">Recipepedia</h1>
-                <h1 className="nav-link" onClick={() => {navigate("/home",{state:{user_id}})}}>Home</h1>
+                <h1 className="nav-link" onClick={() => {navigate("/home",{state:{userId}})}}>Home</h1>
             </div>
             <div onClick={toggle} className="profile-button">
                 <span className="profile-initial">P</span>
@@ -34,8 +34,13 @@ const Navbar=()=>{
                 <span>View Profile</span>
             </div>
             <div className="profile-menu-item">
-                <i className="fas fa-sign-out-alt"></i>
-                <span onClick={()=>{navigate("/login")}}>Log out</span>
+                <i className="fas fa-sign-out-alt"></i>                
+                <span onClick={() => {
+                    logout();
+                    navigate("/login");
+                    }}>
+                    Log out
+                </span>
             </div>
         </div>
     </div>

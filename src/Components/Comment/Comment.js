@@ -36,7 +36,6 @@ const Comments = ({blog_id, user_id}) => {
   }
 
 const DisplayComment = ({comment, expandedReplies, setExpandedReplies}) => {
-  // ...existing state and constants...
 
       const CommentContent = comment.content;
     const likes = comment.likes;

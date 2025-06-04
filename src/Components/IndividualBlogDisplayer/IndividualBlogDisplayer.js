@@ -27,9 +27,7 @@ const IndividualBlogDisplayer = () => {
     createdat,
     user_id
   } = blog;
-  
-  // Initial Condition API
-  // Update Bookmark API
+
 
   useEffect(()=>{
      const InitialCheck= async()=>{
@@ -48,7 +46,6 @@ const IndividualBlogDisplayer = () => {
       }
      };
      InitialCheck();
-     console.log("FIRST CONDITION",bookmarked);
   },[])
 
   useEffect(()=>{
