@@ -3,13 +3,22 @@ import { useUser } from "../Contexts/ContextProvider";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import IndividualHomeDisplayer from "../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer";
+import { useNavigate } from "react-router-dom";
 const Bookmarks = () => {
-    const {userId}=useUser();
+    const {loading,userId}=useUser();
+    const navigate=useNavigate();
     const [bookmarks,setbookmarks]=useState([]);
     useEffect(()=>{
+        if(loading){
+            return;
+        }
+        if(!userId){
+            navigate("/login");
+            return;
+        }
         const fetchBookmarks=async ()=>{
             try{
-                const response=await axios.post("http://127.0.0.1:5000/bookmark",{"user_id":userId},{headers:{"Content-Type":"application/json"}});
+                const response=await axios.get("http://127.0.0.1:5000/api/bookmarks",{params:{userId}});
                 setbookmarks(response.data.bookmarks);
             }
             catch(error){
@@ -17,7 +26,7 @@ const Bookmarks = () => {
             }
         }
         fetchBookmarks();
-    },[]);
+    },[loading,userId,navigate]);
     return (
         <div>
             <Navbar />

@@ -7,7 +7,7 @@ const HomeBlog=({user_id})=>{
     
 useEffect(() => {
   const fetchBlogs = async () => {
-    const API = "http://127.0.0.1:5000/get-blogs";
+    const API = "http://127.0.0.1:5000/api/get/blogs";
     try {
       const response = await axios.get(API);
       setblogs(response.data.message);

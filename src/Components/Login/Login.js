@@ -5,7 +5,7 @@ import axios from "axios";
 import { useUser } from "../Contexts/ContextProvider";
 const Login = () => {
     const navigate=useNavigate();
-    const {setUserId,userId,loading}=useUser();
+    const {setUserId,userId,loading,login}=useUser();
         useEffect(() => {
             if (userId) {
             navigate("/home");
@@ -18,7 +18,7 @@ const Login = () => {
             alert("provide all the details");
             return ;
         }
-        const API="http://127.0.0.1:5000/is-user-there";
+        const API="http://127.0.0.1:5000/api/login";
         const data={    
             "detail":user_detail,
             "password":password
@@ -34,7 +34,7 @@ const Login = () => {
         localStorage.setItem("token",response.data.currentToken);
         
         if(message==="user found"){
-            setUserId(user_id);
+            login(user_id);
             navigate("/home");
         }
         else if(message!=="user not found"){

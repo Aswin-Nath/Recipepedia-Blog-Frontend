@@ -23,12 +23,17 @@ export const UserProvider = ({ children }) => {
     setLoading(false); 
   }, []);
 
+  const login=(id)=>{
+    setUserId(id);
+  }
+  
+
   const logout = () => {
     localStorage.removeItem("token");
     setUserId(null);
   };
   return (
-    <UserContext.Provider value={{ userId, setUserId, loading,logout }}>
+    <UserContext.Provider value={{ userId, setUserId, loading,logout,login }}>
       {children}
     </UserContext.Provider>
   );

@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUser } from "../Contexts/ContextProvider";
 const Signup = () => {
-    const {setUserId}=useUser();
+    const {setUserId,login}=useUser();
     const navigate = useNavigate();
     const [Email, setemail] = useState("");
     const [Password, setpassword] = useState("");
     const [Username, setusername] = useState("");
 
-        const HandleSignup= async (e)=>{
+        const HandleSignup=async (e)=>{
         e.preventDefault();
         if(!Email || !Password || !Username){
             alert("Provide all the details to form a account");
@@ -26,17 +26,9 @@ const Signup = () => {
             alert("Password length should be atleast 8");
             return ;
         }
-        const API="http://127.0.0.1:5000/duplicate-user-checker";
+        const API="http://127.0.0.1:5000/api/users/check";
         try{
-        const data={
-            "username":Username,
-            "mail":Email
-        }
-            const response=await axios.post(API,data,{
-                headers:{
-                    "Content-Type":"application/json"
-                }
-                });
+            const response=await axios.get(API,{params:{Username,Email}});
                 const mail_check=response.data.mail;
                 const name_check=response.data.name;
                 if(name_check){
@@ -47,7 +39,7 @@ const Signup = () => {
                     alert("Email is already registered try with an alternate email");
                     return ;
                 }
-                const ADD_API="http://127.0.0.1:5000/add-user";
+                const ADD_API="http://127.0.0.1:5000/api/signup";
                 const data1={
                         "username":Username,
                         "email":Email,
@@ -59,7 +51,7 @@ const Signup = () => {
                         }
                     })
                     localStorage.setItem("token",insert_response.data.currentToken);
-                    setUserId(insert_response.data.user_id);
+                    login(insert_response.data.user_id);
                     navigate("/home");
                 }
         catch (err) {

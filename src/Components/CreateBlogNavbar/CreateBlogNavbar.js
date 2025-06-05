@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import "./Navbar.css";
+import "./CreateBlogNavbar.css";
 import { useState } from "react";
 import { useUser } from "../Contexts/ContextProvider";
 
-const Navbar = () => {
+const CreateBlogNavbar = () => {
     const {userId,logout} = useUser();
     const navigate = useNavigate();
     const [show,setshow] = useState(0);
@@ -26,14 +26,6 @@ const Navbar = () => {
                     <h1 className="nav-link" onClick={() => {navigate("/home",{state:{userId}})}}>Home</h1>
                 </div>
                 <div className="nav-actions">
-                    <button 
-                        className="create-blog-nav-btn"
-                        onClick={() => navigate('/new-blog')}
-                        aria-label="Create new recipe blog"
-                    >
-                        <span className="button-icon">✏️</span>
-                        <span className="button-text">Write Recipe</span>
-                    </button>
                     <div onClick={toggle} className="profile-button">
                         <span className="profile-initial">P</span>
                     </div>
@@ -59,4 +51,5 @@ const Navbar = () => {
     );
 }
 
-export default Navbar;
+export default CreateBlogNavbar;
+

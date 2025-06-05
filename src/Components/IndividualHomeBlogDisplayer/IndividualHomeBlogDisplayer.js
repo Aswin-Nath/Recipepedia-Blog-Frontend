@@ -15,6 +15,12 @@ const IndividualHomeDisplayer = ({ blog }) => {
     navigate(`/blog/${slug}`, { state: { blog } });
   };
 
+  // Format content preview to have consistent length
+  const getContentPreview = (content) => {
+    const words = content.split(' ').slice(0, 50); // Limit to 50 words
+    return words.join(' ') + (words.length >= 50 ? '...' : '');
+  };
+
   return (
     <div className="blog-container">
       <div className="blog-card">
@@ -27,7 +33,7 @@ const IndividualHomeDisplayer = ({ blog }) => {
         </div>
         
         <div className="blog-content-preview">
-          <p>{blog_content.split('\n').slice(0, 10).join('\n')}</p>
+          <p>{getContentPreview(blog_content)}</p>
         </div>
         
         <div className="blog-footer">

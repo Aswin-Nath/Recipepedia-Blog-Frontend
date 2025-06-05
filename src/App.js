@@ -5,8 +5,9 @@ import Signup from './Components/Signup/Signup';
 import Home from './Components/Home/Home';
 import IndividualBlogDisplayer from './Components/IndividualBlogDisplayer/IndividualBlogDisplayer';
 import Profile from './Components/Profile/Profile';
-import CreateBlog from './Components/CreateBlog/CreateBlog';
 import Bookmarks from './Components/Bookmarks/Bookmarks';
+import CreateBlog from './Components/CreateBlog/CreateBlog';
+import MyBlogs from './Components/MyBlogs/MyBlogs';
 function App() {
   return (
     <div className="App">
@@ -19,7 +20,8 @@ function App() {
           <Route path="/blog/:blog_title" element={<IndividualBlogDisplayer />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
-          <Route path="/create-post" element={<CreateBlog />} />
+          <Route path="/new-blog" element={<CreateBlog/>}/>
+          <Route path="/my-blogs" element={<MyBlogs />} />
         </Routes>
       </Router>
     </div>

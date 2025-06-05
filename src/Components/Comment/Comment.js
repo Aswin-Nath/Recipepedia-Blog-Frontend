@@ -153,7 +153,7 @@ const DisplayComment = ({comment, expandedReplies, setExpandedReplies}) => {
     if (!current_addcomment) {
       return alert("comment should contain at least 3 characters");
     }
-    const API = "http://127.0.0.1:5000/insert-comment";
+    const API = "http://127.0.0.1:5000/api/add/comment";
     try {
       const result = await axios.post(API, {
         blog_id,
@@ -177,9 +177,9 @@ const DisplayComment = ({comment, expandedReplies, setExpandedReplies}) => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      const API = "http://127.0.0.1:5000/get-comment";
+      const API = `http://127.0.0.1:5000/api/get/${blog_id}/comment`;
       try {
-        const response = await axios.post(API, { blog_id }, { headers: { "Content-Type": "application/json" }});
+        const response = await axios.get(API, {params:{ blog_id }});
         const commentsData = response.data.message;
         let temParentData = [];
         let temParent_to_child = new Map();

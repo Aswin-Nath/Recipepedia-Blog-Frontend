@@ -47,12 +47,8 @@
     background-color: rgba(0,114,255,0.1);
 }
 
-/* Create blog button styles */
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
+
+
 
 @keyframes gradientFlow {
     0% {
@@ -67,37 +63,6 @@
         background-position: 0% 50%;
         border-color: rgba(255, 107, 107, 0.5);
     }
-}
-
-.create-blog-nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: linear-gradient(45deg, #2193b0, #6dd5ed);
-    background-size: 200% 200%;
-    color: white;
-    border: 2px solid transparent;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    animation: gradientFlow 3s ease infinite;
-}
-
-.create-blog-nav-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(33, 147, 176, 0.3);
-    animation: gradientFlow 2s ease infinite;
-}
-
-.create-blog-nav-btn .button-icon {
-    font-size: 16px;
-}
-
-.create-blog-nav-btn .button-text {
-    font-weight: 500;
 }
 
 /* Profile button styles */
@@ -192,13 +157,7 @@
         font-size: 1.5rem;
     }
 
-    .create-blog-nav-btn .button-text {
-        display: none;
-    }
 
-    .create-blog-nav-btn {
-        padding: 8px;
-    }
 
     .nav-actions {
         gap: 8px;
