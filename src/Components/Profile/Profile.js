@@ -17,11 +17,11 @@ const Profile = () => {
     };
 
     const handleCreatePost = () => {
-        navigate('/create-post');
+        navigate('/new-blog');
     };
 
     const handleViewAllBlogs = () => {
-        navigate('/my-blogs');  // You'll need to create this route
+        navigate('/my-blogs');  
     };
 
     useEffect(() => {

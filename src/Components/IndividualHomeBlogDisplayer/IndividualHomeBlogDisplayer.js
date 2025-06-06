@@ -15,9 +15,8 @@ const IndividualHomeDisplayer = ({ blog }) => {
     navigate(`/blog/${slug}`, { state: { blog } });
   };
 
-  // Format content preview to have consistent length
   const getContentPreview = (content) => {
-    const words = content.split(' ').slice(0, 50); // Limit to 50 words
+    const words = content.split(' ').slice(0, 50); 
     return words.join(' ') + (words.length >= 50 ? '...' : '');
   };
 

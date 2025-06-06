@@ -8,6 +8,7 @@ import Profile from './Components/Profile/Profile';
 import Bookmarks from './Components/Bookmarks/Bookmarks';
 import CreateBlog from './Components/CreateBlog/CreateBlog';
 import MyBlogs from './Components/MyBlogs/MyBlogs';
+import EditBlog from './Components/EditBlog/EditBlog';
 function App() {
   return (
     <div className="App">
@@ -22,6 +23,7 @@ function App() {
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/new-blog" element={<CreateBlog/>}/>
           <Route path="/my-blogs" element={<MyBlogs />} />
+          <Route path='/edit-post' element={<EditBlog/>}/>
         </Routes>
       </Router>
     </div>

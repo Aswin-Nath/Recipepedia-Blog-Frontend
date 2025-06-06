@@ -98,3 +98,39 @@
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     }
 }
+
+/* Add these styles to both CreateBlog.css and EditBlog.css */
+.video-upload-section {
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.video-preview-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 1rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.video-preview {
+    width: 100%;
+    display: block;
+}
+
+.remove-video-button {
+    position: absolute !important;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    padding: 4px !important;
+}
+
+.remove-video-button:hover {
+    background-color: rgba(255, 255, 255, 1) !important;
+}

@@ -11,9 +11,15 @@ const Comments = ({blog_id, user_id}) => {
 
   const buildComment = (currentComment) => {
     currentComment.date = currentComment.createdat.slice(0,10);
-    currentComment.time = currentComment.createdat.slice(11,16);
+    let [hours, minutes] = currentComment.createdat.slice(11, 16).split(':').map(Number);
+
+    minutes += 30;
+    hours += 5 + Math.floor(minutes / 60);
+    minutes = minutes % 60;
+    hours = hours % 24;
+    currentComment.time = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+
     delete currentComment.createdat;
-    
     if (currentComment.parent_id === currentComment.comment_id) {
       setParentData(prev => {
         if (prev.some(c => c.comment_id === currentComment.comment_id)) return prev;
@@ -181,6 +187,7 @@ const DisplayComment = ({comment, expandedReplies, setExpandedReplies}) => {
       try {
         const response = await axios.get(API, {params:{ blog_id }});
         const commentsData = response.data.message;
+        console.log(commentsData);
         let temParentData = [];
         let temParent_to_child = new Map();
         

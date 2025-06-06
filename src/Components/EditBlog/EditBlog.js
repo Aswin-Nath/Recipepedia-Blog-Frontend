@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import CreateBlogNavbar from "../CreateBlogNavbar/CreateBlogNavbar";
 import { useUser } from '../Contexts/ContextProvider';
@@ -16,35 +16,36 @@ import {
     LinearProgress,
     Typography,
     IconButton,
-    Box,
+    Box
 } from '@mui/material';
-import VideoFileIcon from '@mui/icons-material/VideoFile';
 import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
-import './CreateBlog.css';
+import './EditBlog.css';
 
-const CreateBlog = () => {
+const EditBlog = () => {
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const { blog } = state;
     const { userId } = useUser();
+    
+    const [formData, setFormData] = useState({
+        title: blog.title || '',
+        difficulty: blog.difficulty || '',
+        ingredients: blog.ingredients || [],
+        categories: blog.categories || [],
+        content: blog.content || '',
+        images: []
+    });
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [blog_id,setblog_id]=useState(null);
     const [imagePreviews, setImagePreviews] = useState([]);
-    const [formData, setFormData] = useState({
-        title: '',
-        difficulty: '',
-        ingredients: [],
-        categories: [],
-        content: '',
-        images: []
-    });
 
     const difficultyLevels = ['Easy', 'Medium', 'Hard', 'Expert'];
     const categoryOptions = ['Indian', 'Italian', 'Chinese', 'Quick', 'Spicy', 'Vegetarian'];
 
-    // Cleanup previews on unmount
     useEffect(() => {
         return () => {
             imagePreviews.forEach(preview => URL.revokeObjectURL(preview));
@@ -55,55 +56,6 @@ const CreateBlog = () => {
         const ingredients = e.target.value.split(',').map(item => item.trim()).filter(Boolean);
         setFormData(prev => ({ ...prev, ingredients }));
     };
-    // Add to existing state declarations
-const [selectedVideo, setSelectedVideo] = useState(null);
-const [videoUrl, setVideoUrl] = useState('');
-const [videoUploadProgress, setVideoUploadProgress] = useState(0);
-
-// Add new video handling functions
-const handleVideoUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (file.size > 100 * 1024 * 1024) {
-        setError('Video size must be less than 100MB');
-        return;
-    }
-
-    setSelectedVideo(file);
-    
-    const formData = new FormData();
-    formData.append('video', file);
-    formData.append('video_name', `recipe_video_${Date.now()}`);
-
-    try {
-        setVideoUploadProgress(0);
-        const response = await axios.post(
-            'https://image-upload-backend-v12y.onrender.com/upload-video',
-            formData,
-            {
-                headers: { 'Content-Type': 'multipart/form-data' },
-                onUploadProgress: (progressEvent) => {
-                    const progress = (progressEvent.loaded / progressEvent.total) * 100;
-                    setVideoUploadProgress(progress);
-                }
-            }
-        );
-        setVideoUrl(response.data.url);
-        setFormData(prev => ({ ...prev, video_url: response.data.url }));
-    } catch (error) {
-        setError('Failed to upload video: ' + error.message);
-        console.error('Video upload error:', error);
-    } finally {
-        setVideoUploadProgress(0);
-    }
-};
-
-const removeVideo = () => {
-    setSelectedVideo(null);
-    setVideoUrl('');
-    setFormData(prev => ({ ...prev, video_url: '' }));
-};
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
@@ -167,72 +119,61 @@ const removeVideo = () => {
         if (!formData.content.trim()) errors.push('Recipe instructions are required');
         if (!formData.difficulty) errors.push('Difficulty level is required');
         if (formData.ingredients.length === 0) errors.push('At least one ingredient is required');
-        
         return errors;
     };
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validationErrors = validateForm();
+    
+    if (validationErrors.length > 0) {
+        setError(validationErrors.join(', '));
+        return;
+    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const validationErrors = validateForm();
-        
-        if (validationErrors.length > 0) {
-            setError(validationErrors.join(', '));
-            return;
+    setIsSubmitting(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+        await axios.put(`http://localhost:5000/api/blogs/${blog.blog_id}`, {
+            title: formData.title.trim(),
+            content: formData.content.trim(),
+            difficulty: formData.difficulty,
+            ingredients: formData.ingredients,
+            categories: formData.categories
+        });
+
+        let imageUrls = [];
+        if (formData.images.length > 0) {
+            imageUrls = await uploadImages();
+            
+            await Promise.all(imageUrls.map(url => 
+                axios.post('http://localhost:5000/api/blogs/images', {
+                    blog_id: blog.blog_id,
+                    image_url: url
+                })
+            ));
         }
-        setIsSubmitting(true);
-        setError('');
-        setSuccessMessage('');
 
-        try {
-            let imageUrls = [];
-            if (formData.images.length > 0) {
-                imageUrls = await uploadImages();
-            }
-            const blogResponse = await axios.post('http://localhost:5000/api/blogs', {
-                title: formData.title.trim(),
-                content: formData.content.trim(),
-                user_id: userId,
-                difficulty: formData.difficulty,
-                ingredients: formData.ingredients,
-                categories: formData.categories,
-            });
-            setblog_id(blogResponse.data.blog_id);
-            if (imageUrls.length > 0) {
-                await Promise.all(imageUrls.map(url => 
-                    axios.post('http://localhost:5000/api/blogs/images', {
-                        blog_id: blogResponse.data.blog_id,
-                        image_url: url
-                    })
-                ));
-            }
-            if(videoUrl){
-                try{
-                    const API="http://localhost:5000/api/blogs/videos";
-                    axios.post(API,{blog_id:blog_id,video_url:videoUrl},{headers:{"Content-Type":"application/json"}});
-                }
-                catch(error){
-                    console.log("error occured while adding",error.message);
-                }
-            }
+        setSuccessMessage('Recipe updated successfully!');
+        setTimeout(() => {
+            navigate('/home');
+        }, 1500);
+    } catch (err) {
+        setError(err.response?.data?.error || 'Failed to update recipe. Please try again.');
+        console.error('Error:', err);
+    } finally {
+        setIsSubmitting(false);
+        setUploadProgress(0);
+    }
+};
 
-            setSuccessMessage('Recipe posted successfully!');
-            setTimeout(() => {
-                navigate('/home');
-            }, 1500);
-        } catch (err) {
-            setError(err.response?.data?.error || 'Failed to create recipe. Please try again.');
-            console.error('Error:', err);
-        } finally {
-            setIsSubmitting(false);
-            setUploadProgress(0);
-        }
-    };
 
     return (
         <div>
             <CreateBlogNavbar/>
             <div className="create-post-container">
-                <h1>Create New Recipe</h1>
+                <h1>Edit Recipe</h1>
                 <form onSubmit={handleSubmit} className="recipe-form">
                     <TextField
                         required
@@ -345,53 +286,6 @@ const removeVideo = () => {
                         )}
                     </div>
 
-            <div className="video-upload-section">
-                <input
-                    type="file"
-                    id="video-upload"
-                    accept="video/*"
-                    style={{ display: 'none' }}
-                    onChange={handleVideoUpload}
-                />
-                <label htmlFor="video-upload">
-                    <Button
-                        component="span"
-                        variant="outlined"
-                        startIcon={<VideoFileIcon />}
-                        className="upload-button"
-                        disabled={!!videoUrl}
-                    >
-                        Upload Recipe Video
-                    </Button>
-                </label>
-
-                {videoUploadProgress > 0 && (
-                    <Box sx={{ width: '100%', mt: 2 }}>
-                        <LinearProgress variant="determinate" value={videoUploadProgress} />
-                        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
-                            Uploading Video: {Math.round(videoUploadProgress)}%
-                        </Typography>
-                    </Box>
-                )}
-
-                {videoUrl && (
-                    <div className="video-preview-container">
-                        <video 
-                            controls 
-                            src={videoUrl}
-                            className="video-preview"
-                        />
-                        <IconButton
-                            className="remove-video-button"
-                            onClick={removeVideo}
-                            size="small"
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </div>
-                )}
-            </div>
-
                     <TextField
                         required
                         fullWidth
@@ -426,7 +320,7 @@ const removeVideo = () => {
                             {isSubmitting ? (
                                 <CircularProgress size={24} color="inherit" />
                             ) : (
-                                'Post Recipe'
+                                'Update Recipe'
                             )}
                         </Button>
                     </div>
@@ -436,4 +330,4 @@ const removeVideo = () => {
     );
 };
 
-export default CreateBlog;
+export default EditBlog;
