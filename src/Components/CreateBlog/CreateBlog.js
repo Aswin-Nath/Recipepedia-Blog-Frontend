@@ -44,7 +44,6 @@ const CreateBlog = () => {
     const difficultyLevels = ['Easy', 'Medium', 'Hard', 'Expert'];
     const categoryOptions = ['Indian', 'Italian', 'Chinese', 'Quick', 'Spicy', 'Vegetarian'];
 
-    // Cleanup previews on unmount
     useEffect(() => {
         return () => {
             imagePreviews.forEach(preview => URL.revokeObjectURL(preview));
@@ -55,12 +54,10 @@ const CreateBlog = () => {
         const ingredients = e.target.value.split(',').map(item => item.trim()).filter(Boolean);
         setFormData(prev => ({ ...prev, ingredients }));
     };
-    // Add to existing state declarations
 const [selectedVideo, setSelectedVideo] = useState(null);
 const [videoUrl, setVideoUrl] = useState('');
 const [videoUploadProgress, setVideoUploadProgress] = useState(0);
 
-// Add new video handling functions
 const handleVideoUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;

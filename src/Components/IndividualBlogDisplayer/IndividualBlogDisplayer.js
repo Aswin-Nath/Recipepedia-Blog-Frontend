@@ -24,7 +24,6 @@ const IndividualBlogDisplayer = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 const [overlayActive, setOverlayActive] = useState(false);
 
-// Add these handler functions
 const handleImageClick = (imageUrl, index) => {
   setSelectedImage({ url: imageUrl, index });
   setOverlayActive(true);
@@ -360,6 +359,24 @@ const handleNextImage = () => {
     </div>
   </>
 )}
+
+{/* After the image gallery section, add: */}
+{video_url && video_url.length > 0 && (
+  <div className="recipe-video-section">
+    <h3>Recipe Video</h3>
+    <div className="video-container">
+      <video 
+        controls
+        className="recipe-video"
+        poster={image_urls.length > 0 ? image_urls[0].image_url : null}
+      >
+        <source src={video_url} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+)}
+
           <div className="blog-content">
             <h3>Recipe Instructions</h3>
             <div className="content-box">
