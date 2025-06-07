@@ -1,10 +1,31 @@
-import { useLocation,useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState,useEffect } from "react";
 import "./IndividualBlogDisplayer.css";
 import Navbar from "../Navbar/Navbar";
 import Comment from "../Comment/Comment";
 import axios from "axios";
 import { useUser } from "../Contexts/ContextProvider";
+const LoadingSpinner = () => (
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    gap: '1rem'
+  }}>
+    <div style={{
+      width: '50px',
+      height: '50px',
+      border: '5px solid #f3f3f3',
+      borderTop: '5px solid #3498db',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite'
+    }} />
+    <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Loading recipe...</p>
+  </div>
+);
+
 const IndividualBlogDisplayer = () => {
   const {userId,loading}=useUser();
   const {blog_id}=useParams();
@@ -14,17 +35,68 @@ const IndividualBlogDisplayer = () => {
   const [blog,setblog]=useState({});
   const [loaded,setloaded]=useState(false);
   const [bookmarked, setBookmarked] = useState(false);
-  const [pageload,setload]=useState(true);
+  const [pageloading,setload]=useState(true);
+  const [initially_liked,setInitial_liked]=useState(false);
+  const [like_status,setlike_status]=useState(false);
   useEffect(()=>{
     const fetchBlog=async ()=>{
       const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
       const response=await axios.get(API);
       setblog(response.data.blog[0]);
-      console.log("BLOG",response.data);
+      // console.log("BLOG",response.data);
       setload(false);
     }
     fetchBlog();
   },[blog_id])
+
+  useEffect(()=>{
+    if(loading){
+      return;
+    }
+    const API="http://127.0.0.1:5000/api/get/blogs/likes";
+    const fetchLikeStatus=async ()=>{
+      try{
+        console.log("DATA", { userId, blog_id: parseInt(blog_id) });
+        const response=await axios.post(API,{userId,blog_id});
+        const status=response.data.status;
+        console.log("STATUS",status)
+        if(status==-1){
+          return;
+        }
+        setInitial_liked(true);
+        console.log("LIKE STATUS",status);
+        setlike_status(status);
+      }
+      catch(error){
+        console.log("Error occured while getting like status",error);
+      }
+    }
+    fetchLikeStatus();
+  },[userId,blog_id])
+
+  
+  const handleLikeClick = async () => {
+    // Immediately update UI
+    const newLikeStatus = like_status === 1 ? 0 : 1;
+    setlike_status(newLikeStatus);
+    
+    const data = { userId, blog_id: parseInt(blog_id) };
+    try {
+      const API = initially_liked 
+        ? "http://127.0.0.1:5000/api/edit/blogs/likes/"
+        : "http://127.0.0.1:5000/api/add/blogs/likes/";
+      
+      if (initially_liked) {
+        await axios.put(API, data);
+      } else {
+        await axios.post(API, data);
+        setInitial_liked(true);
+      }
+    } catch (error) {
+      setlike_status(like_status);
+      console.error("Error updating like:", error);
+    }
+  };
 
   const toggleBookmark = () => {
     setBookmarked(!bookmarked);
@@ -165,10 +237,9 @@ const handleNextImage = () => {
   },[bookmarked,user_id,blog_id,loaded])
   const difficultyLevel = difficulty;
 
-  if(pageload){
-    return <div>Loading</div>
-  }
-
+  if (loading || pageloading) {
+      return <LoadingSpinner/>;
+}
   return (
     <div>
       <Navbar />
@@ -180,7 +251,13 @@ const handleNextImage = () => {
               <span className="blog-date">
                 {new Date(createdat).toLocaleDateString()}
               </span>
-              <span className="heart-icon">❤️ {likes}</span>
+              <span 
+                className="heart-icon" 
+                onClick={handleLikeClick}
+                style={{ cursor: 'pointer' }}
+              >
+                {like_status === 1 ? "❤️" : "🤍"} {likes + like_status}
+              </span>
               <span className="difficulty-level">{difficultyLevel}</span>
 
               <span

@@ -23,8 +23,15 @@ export const UserProvider = ({ children }) => {
     setLoading(false); 
   }, []);
 
-  const login=(id)=>{
-    setUserId(id);
+  const login=(token)=>{
+   try {
+      localStorage.setItem("token", token);
+      const decoded = jwtDecode(token);
+      setUserId(decoded.user_id);
+    } catch (error) {
+      console.error("Login error:", error);
+      logout();
+    }
   }
   
 

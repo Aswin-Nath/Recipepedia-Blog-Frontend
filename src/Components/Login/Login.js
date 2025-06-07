@@ -34,7 +34,7 @@ const Login = () => {
         localStorage.setItem("token",response.data.currentToken);
         
         if(message==="user found"){
-            login(user_id);
+            login(response.data.currentToken);
             navigate("/home");
         }
         else if(message!=="user not found"){
