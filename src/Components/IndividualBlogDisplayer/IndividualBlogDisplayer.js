@@ -1,21 +1,30 @@
-import { useLocation,useNavigate } from "react-router-dom";
+import { useLocation,useNavigate, useParams } from "react-router-dom";
 import { useState,useEffect } from "react";
 import "./IndividualBlogDisplayer.css";
 import Navbar from "../Navbar/Navbar";
 import Comment from "../Comment/Comment";
 import axios from "axios";
 import { useUser } from "../Contexts/ContextProvider";
-import { use } from "react";
 const IndividualBlogDisplayer = () => {
   const {userId,loading}=useUser();
-  const { state } = useLocation();
-  const { blog } = state; 
+  const {blog_id}=useParams();
 
   const [image_urls,setimage_url]=useState([]);
   const [video_url,setvideo_url]=useState("");
-
+  const [blog,setblog]=useState({});
   const [loaded,setloaded]=useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [pageload,setload]=useState(true);
+  useEffect(()=>{
+    const fetchBlog=async ()=>{
+      const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
+      const response=await axios.get(API);
+      setblog(response.data.blog[0]);
+      console.log("BLOG",response.data);
+      setload(false);
+    }
+    fetchBlog();
+  },[blog_id])
 
   const toggleBookmark = () => {
     setBookmarked(!bookmarked);
@@ -52,7 +61,6 @@ const handleNextImage = () => {
   }
 };
   const {
-    blog_id,
     title,
     content,
     categories,
@@ -99,7 +107,7 @@ const handleNextImage = () => {
       }
      };
      InitialCheck();
-  },[])
+  },[user_id,blog_id])
 
 
   useEffect(()=>{
@@ -154,10 +162,12 @@ const handleNextImage = () => {
       }
     }
     updateBookMark();
-  },[bookmarked])
+  },[bookmarked,user_id,blog_id,loaded])
   const difficultyLevel = difficulty;
 
-  
+  if(pageload){
+    return <div>Loading</div>
+  }
 
   return (
     <div>
@@ -211,7 +221,7 @@ const handleNextImage = () => {
               {!loading && userId === blog.user_id && ( 
                 <div>
                               <span
-            onClick={() => {navigate("/edit-post",{state:{blog}});}}
+            onClick={() => {navigate(`/edit-post/${blog_id}`);}}
             role="button"
             title="Edit Recipe"
             aria-label="Edit recipe"

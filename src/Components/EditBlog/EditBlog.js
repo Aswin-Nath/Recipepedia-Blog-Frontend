@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import CreateBlogNavbar from "../CreateBlogNavbar/CreateBlogNavbar";
-import { useUser } from '../Contexts/ContextProvider';
 import { 
     TextField, 
     Button, 
@@ -18,24 +17,87 @@ import {
     IconButton,
     Box
 } from '@mui/material';
+import VideoFileIcon from '@mui/icons-material/VideoFile';
 import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
 import './EditBlog.css';
 
 const EditBlog = () => {
     const navigate = useNavigate();
-    const { state } = useLocation();
-    const { blog } = state;
-    const { userId } = useUser();
-    
+    const [image_urls,set_image_urls]=useState([]);
+    const { blog_id } = useParams();
+    const [blog,setBlog]=useState([]);
+    const [videoUrl, setVideoUrl] = useState('');
+    const [videoUploadProgress, setVideoUploadProgress] = useState(0);
+    // const []
+      useEffect(()=>{
+    const fetchImages= async ()=>{
+      try{
+        const API=`http://127.0.0.1:5000/api/get/blogs/images/${blog_id}`;
+        const response=await axios.get(API);
+        const urls=response.data.image_urls;
+        console.log("IMAGE URLS",urls);
+        set_image_urls(urls);
+      }
+      catch(error){
+        console.log("Error occurred",error);
+      }
+    }
+    fetchImages();
+  },[blog_id])
+
+  useEffect(()=>{
+    const fetchVideos=async ()=>{
+      try{
+        const API=`http://127.0.0.1:5000/api/get/blogs/videos/${blog_id}`;
+        // console.log("VIDEO",blog_id);
+        const response=await axios.get(API);
+
+        const urls=response.data.video_url;
+        if(response?.data?.video_url?.[0].length>0){
+            console.log(urls[0].length);
+            setVideoUrl(urls[0]);   
+        }
+      }
+      catch(error){
+        console.log("Error occured",error);
+      }
+    }
+    fetchVideos();
+  },[blog_id]);
+    useEffect(()=>{
+        const fetchBlogData=async ()=>{
+            try{
+                const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
+                const response=await axios.get(API);
+                setBlog(response.data.blog[0]);
+            }
+            catch(error){
+                console.log("Error occured while fetching Blog data",error);
+            }
+        }
+        fetchBlogData();
+    },[])    
+    const [delete_image_id,setdelete_image]=useState([]);
+    const [delete_video,setdelete_video]=useState(false);
     const [formData, setFormData] = useState({
-        title: blog.title || '',
-        difficulty: blog.difficulty || '',
-        ingredients: blog.ingredients || [],
-        categories: blog.categories || [],
-        content: blog.content || '',
-        images: []
-    });
+            title:"",
+            difficulty:"",
+            ingredients: [],
+            categories: [],
+            content: '',
+            images: []  
+        });
+    useEffect(()=>{
+        setFormData({
+            title: blog.title || '',
+            difficulty: blog.difficulty || '',
+            ingredients: blog.ingredients || [],
+            categories: blog.categories || [],
+            content: blog.content || '',
+            images: []
+        });
+    },[blog])
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
@@ -45,16 +107,71 @@ const EditBlog = () => {
 
     const difficultyLevels = ['Easy', 'Medium', 'Hard', 'Expert'];
     const categoryOptions = ['Indian', 'Italian', 'Chinese', 'Quick', 'Spicy', 'Vegetarian'];
+    
 
+
+    useEffect(()=>{
+        var tem=[];
+        for(let i=0;i<image_urls.length;i++){
+            tem.push({url:image_urls[i].image_url,type:"old",image_id:image_urls[i].image_id});
+        }
+        setImagePreviews(tem);
+    },[image_urls])
+
+    const handleIngredientsChange = (e) => {
+        const ingredients = e.target.value.split(',').map(item => item.trim()).filter(Boolean);
+        setFormData(prev => ({ ...prev, ingredients }));
+    };
+
+    
     useEffect(() => {
         return () => {
             imagePreviews.forEach(preview => URL.revokeObjectURL(preview));
         };
     }, []);
 
-    const handleIngredientsChange = (e) => {
-        const ingredients = e.target.value.split(',').map(item => item.trim()).filter(Boolean);
-        setFormData(prev => ({ ...prev, ingredients }));
+    const handleVideoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+    
+        if (file.size > 100 * 1024 * 1024) {
+            setError('Video size must be less than 100MB');
+            return;
+        }
+    
+        
+        const formData = new FormData();
+        formData.append('video', file);
+        formData.append('video_name', `recipe_video_${Date.now()}`);
+    
+        try {
+            setVideoUploadProgress(0);
+            const response = await axios.post(
+                'https://image-upload-backend-v12y.onrender.com/upload-video',
+                formData,
+                {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    onUploadProgress: (progressEvent) => {
+                        const progress = (progressEvent.loaded / progressEvent.total) * 100;
+                        setVideoUploadProgress(progress);
+                    }
+                }
+            );
+            setVideoUrl(response.data.url);
+            setFormData(prev => ({ ...prev, video_url: response.data.url }));
+        } catch (error) {
+            setError('Failed to upload video: ' + error.message);
+            console.error('Video upload error:', error);
+        } finally {
+            setVideoUploadProgress(0);
+        }
+    };
+    
+    const removeVideo = () => {
+        // setSelectedVideo(null);
+        setdelete_video(true);
+        setVideoUrl('');
+        setFormData(prev => ({ ...prev, video_url: '' }));
     };
 
     const handleImageUpload = (e) => {
@@ -70,12 +187,19 @@ const EditBlog = () => {
             ...prev, 
             images: [...prev.images, ...validFiles]
         }));
-        
-        const newPreviews = validFiles.map(file => URL.createObjectURL(file));
-        setImagePreviews(prev => [...prev, ...newPreviews]);
+        let tem=[];
+        for(let i=0;i<validFiles.length;i++){
+            const url=URL.createObjectURL(validFiles[i]);
+            tem.append({url:url,type:"new"});
+        }
+        setImagePreviews(prev => [...prev, ...tem]);
     };
 
     const removeImage = (index) => {
+        if(imagePreviews[index].type==="old"){
+            console.log(imagePreviews[index]);
+            setdelete_image(prev=>[...prev,imagePreviews[index].image_id]);   
+        }
         URL.revokeObjectURL(imagePreviews[index]);
         setImagePreviews(prev => prev.filter((_, i) => i !== index));
         setFormData(prev => ({
@@ -134,6 +258,8 @@ const handleSubmit = async (e) => {
     setError('');
     setSuccessMessage('');
 
+    console.log(delete_image_id,imagePreviews);
+
     try {
         await axios.put(`http://localhost:5000/api/blogs/${blog.blog_id}`, {
             title: formData.title.trim(),
@@ -144,6 +270,10 @@ const handleSubmit = async (e) => {
         });
 
         let imageUrls = [];
+        if(delete_image_id.length>0){
+            const API="http://localhost:5000/api/edit/blogs/images";
+            await axios.put(API,{delete_image_id});
+        }
         if (formData.images.length > 0) {
             imageUrls = await uploadImages();
             
@@ -154,10 +284,17 @@ const handleSubmit = async (e) => {
                 })
             ));
         }
-
+        if(delete_video){
+            await  axios.put("http://localhost:5000/api/edit/blogs/videos",{blog_id});
+        }
+        if(videoUrl){
+            const API="http://localhost:5000/api/blogs/videos";
+            await axios.post(API,{blog_id:blog_id,video_url:videoUrl},{headers:{"Content-Type":"application/json"}});
+        }
         setSuccessMessage('Recipe updated successfully!');
         setTimeout(() => {
             navigate('/home');
+
         }, 1500);
     } catch (err) {
         setError(err.response?.data?.error || 'Failed to update recipe. Please try again.');
@@ -168,13 +305,12 @@ const handleSubmit = async (e) => {
     }
 };
 
-
     return (
         <div>
             <CreateBlogNavbar/>
             <div className="create-post-container">
                 <h1>Edit Recipe</h1>
-                <form onSubmit={handleSubmit} className="recipe-form">
+                <form  className="recipe-form">
                     <TextField
                         required
                         fullWidth
@@ -269,7 +405,7 @@ const handleSubmit = async (e) => {
                                 {imagePreviews.map((preview, index) => (
                                     <div key={index} className="preview-container">
                                         <img 
-                                            src={preview} 
+                                            src={preview.url} 
                                             alt={`Preview ${index + 1}`}
                                             className="preview-image"
                                         />
@@ -286,6 +422,52 @@ const handleSubmit = async (e) => {
                         )}
                     </div>
 
+            <div className="video-upload-section">
+                <input
+                    type="file"
+                    id="video-upload"
+                    accept="video/*"
+                    style={{ display: 'none' }}
+                    onChange={handleVideoUpload}
+                />
+                <label htmlFor="video-upload">
+                    <Button
+                        component="span"
+                        variant="outlined"
+                        startIcon={<VideoFileIcon />}
+                        className="upload-button"
+                        disabled={videoUrl.length>0}
+                    >
+                        Upload Recipe Video
+                    </Button>
+                </label>
+
+                {videoUploadProgress > 0 && (
+                    <Box sx={{ width: '100%', mt: 2 }}>
+                        <LinearProgress variant="determinate" value={videoUploadProgress} />
+                        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
+                            Uploading Video: {Math.round(videoUploadProgress)}%
+                        </Typography>
+                    </Box>
+                )}
+
+                {videoUrl.length>0 && (
+                    <div className="video-preview-container">
+                        <video 
+                            controls 
+                            src={videoUrl}
+                            className="video-preview"
+                        />
+                        <IconButton
+                            className="remove-video-button"
+                            onClick={removeVideo}
+                            size="small"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </div>
+                )}
+            </div>
                     <TextField
                         required
                         fullWidth
@@ -314,6 +496,7 @@ const handleSubmit = async (e) => {
                         <Button 
                             type="submit" 
                             variant="contained" 
+                            onClick={handleSubmit}
                             color="primary"
                             disabled={isSubmitting}
                         >

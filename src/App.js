@@ -18,12 +18,12 @@ function App() {
           <Route path='/login' element={<Login/>}></Route>
           <Route path='/signup' element={<Signup/>}></Route>
           <Route path="/home" element={<Home/>}></Route>
-          <Route path="/blog/:blog_title" element={<IndividualBlogDisplayer />} />
+          <Route path="/blog/:blog_id/:blog_title" element={<IndividualBlogDisplayer />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/new-blog" element={<CreateBlog/>}/>
           <Route path="/my-blogs" element={<MyBlogs />} />
-          <Route path='/edit-post' element={<EditBlog/>}/>
+          <Route path='/edit-post/:blog_id' element={<EditBlog/>}/>
         </Routes>
       </Router>
     </div>

@@ -12,7 +12,7 @@ const IndividualHomeDisplayer = ({ blog }) => {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
-    navigate(`/blog/${slug}`, { state: { blog } });
+    navigate(`/blog/${blog_id}/${slug}`, { state: { blog } });
   };
 
   const getContentPreview = (content) => {

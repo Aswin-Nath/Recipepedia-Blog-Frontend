@@ -48,13 +48,12 @@ const CreateBlog = () => {
         return () => {
             imagePreviews.forEach(preview => URL.revokeObjectURL(preview));
         };
-    }, []);
+    }, [imagePreviews]);
 
     const handleIngredientsChange = (e) => {
         const ingredients = e.target.value.split(',').map(item => item.trim()).filter(Boolean);
         setFormData(prev => ({ ...prev, ingredients }));
     };
-const [selectedVideo, setSelectedVideo] = useState(null);
 const [videoUrl, setVideoUrl] = useState('');
 const [videoUploadProgress, setVideoUploadProgress] = useState(0);
 
@@ -67,7 +66,6 @@ const handleVideoUpload = async (e) => {
         return;
     }
 
-    setSelectedVideo(file);
     
     const formData = new FormData();
     formData.append('video', file);
@@ -97,7 +95,7 @@ const handleVideoUpload = async (e) => {
 };
 
 const removeVideo = () => {
-    setSelectedVideo(null);
+    // setSelectedVideo(null);
     setVideoUrl('');
     setFormData(prev => ({ ...prev, video_url: '' }));
 };
@@ -195,7 +193,7 @@ const removeVideo = () => {
             });
             setblog_id(blogResponse.data.blog_id);
             if (imageUrls.length > 0) {
-                await Promise.all(imageUrls.map(url => 
+                await Promise.all(imageUrls.map(url=>
                     axios.post('http://localhost:5000/api/blogs/images', {
                         blog_id: blogResponse.data.blog_id,
                         image_url: url
