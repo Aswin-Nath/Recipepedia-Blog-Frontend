@@ -13,7 +13,7 @@ const Profile = () => {
     const [activeTab, setActiveTab] = useState('blogs');
 
     const handleBookmarks = () => {
-        navigate('/bookmarks');
+        navigate('/profile/bookmarks');
     };
 
     const handleCreatePost = () => {
@@ -21,9 +21,9 @@ const Profile = () => {
     };
 
     const handleViewAllBlogs = () => {
-        navigate('/my-blogs');  
+        navigate('/profile/my-blogs');  
     };
-
+    
     useEffect(() => {
         if (loading) {
             return;
@@ -43,7 +43,7 @@ const Profile = () => {
             }
         }
         fetchBlogs();
-    }, [userId, loading])
+    }, [userId, loading,navigate])
 
 return (
     <div className="profile-container">

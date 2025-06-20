@@ -4,7 +4,7 @@ import Navbar from "../Navbar/Navbar";
 import { useUser } from '../Contexts/ContextProvider';
 import axios from 'axios';
 import IndividualHomeDisplayer from '../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer';
-
+import './MyBlogs.css';
 const MyBlogs = () => {
     const { userId, loading } = useUser();
     const [blogs, setblogs] = useState([]);
@@ -29,7 +29,7 @@ const MyBlogs = () => {
             }
         }
         fetchBlogs();
-    }, [userId, loading])
+    }, [userId, loading,navigate])
 
     return (
         <div className="my-blogs-container">

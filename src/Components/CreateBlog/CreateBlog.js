@@ -24,6 +24,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import './CreateBlog.css';
 
 const CreateBlog = () => {
+    const token = localStorage.getItem("token");
     const navigate = useNavigate();
     const { userId } = useUser();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -190,7 +191,12 @@ const removeVideo = () => {
                 difficulty: formData.difficulty,
                 ingredients: formData.ingredients,
                 categories: formData.categories,
-            });
+            },{
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            }
+        );
             setblog_id(blogResponse.data.blog_id);
             if (imageUrls.length > 0) {
                 await Promise.all(imageUrls.map(url=>

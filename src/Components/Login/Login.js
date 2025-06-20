@@ -5,12 +5,12 @@ import axios from "axios";
 import { useUser } from "../Contexts/ContextProvider";
 const Login = () => {
     const navigate=useNavigate();
-    const {setUserId,userId,loading,login}=useUser();
-        useEffect(() => {
-            if (userId) {
-            navigate("/home");
-        }
-        }, [userId, loading, navigate]);
+    const {userId,loading,login}=useUser();
+    //     useEffect(() => {
+    //         if (userId) {
+    //         navigate("/home");
+    //     }
+    //     }, [userId, loading, navigate]);
     const [user_detail, setdetail] = useState("");
     const [password, setpassword] = useState("");
     const HandleLogin= async ()=>{
@@ -35,7 +35,6 @@ const Login = () => {
         
         if(message==="user found"){
             login(response.data.currentToken);
-            navigate("/home");
         }
         else if(message!=="user not found"){
             alert("Error occured",message);

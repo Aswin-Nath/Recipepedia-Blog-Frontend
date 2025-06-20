@@ -38,6 +38,12 @@ const IndividualBlogDisplayer = () => {
   const [pageloading,setload]=useState(true);
   const [initially_liked,setInitial_liked]=useState(false);
   const [like_status,setlike_status]=useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+
+  const handleReportClick = () => {
+    setShowReportModal(true);
+  };
   useEffect(()=>{
     const fetchBlog=async ()=>{
       const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
@@ -198,6 +204,10 @@ const handleNextImage = () => {
     fetchImages();
   },[blog_id])
 
+  const toggleMenu=()=>{
+
+  }
+
   useEffect(()=>{
     const fetchVideos=async ()=>{
       try{
@@ -294,6 +304,54 @@ const handleNextImage = () => {
                   <path d="M2 1h10v16l-5-3-5 3V1z" />
                 </svg>
               </span>
+              <div className="report-blog">
+                <span className="report-icon" onClick={handleReportClick}>
+                  <i className="fas fa-flag"></i> {/* Font Awesome flag icon */}
+                </span>
+              </div>
+                {/* Have to Send user_id,post_id,reason */}
+              {showReportModal && (
+                <div className="report-overlay">
+                  <div className="report-modal">
+                    <h3>Report Content</h3>
+                    <textarea
+                      value={reportReason}
+                      onChange={(e) => setReportReason(e.target.value)}
+                      placeholder="Please provide a reason for reporting..."
+                    />
+                    <div className="modal-actions">
+                      <button 
+                        onClick={async () => {
+                          const API="http://127.0.0.1:5000/api/post/report-posts";
+                          const data={
+                            user_id,blog_id,reportReason,
+                          }
+                          try{
+                            await axios.post(API,data,{headers:{'Content-Type':"application/json"}})
+                            alert("Reported");
+                            console.log('Report submitted:', reportReason);
+                            setShowReportModal(false);
+                            setReportReason('');
+                          }
+                          catch(error){
+                            alert("Error occured while adding the Report",error.message);
+                          }
+                        }}
+                      >
+                        Submit
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setShowReportModal(false);
+                          setReportReason('');
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               {!loading && userId === blog.user_id && ( 
                 <div>

@@ -9,10 +9,11 @@ import Bookmarks from './Components/Bookmarks/Bookmarks';
 import CreateBlog from './Components/CreateBlog/CreateBlog';
 import MyBlogs from './Components/MyBlogs/MyBlogs';
 import EditBlog from './Components/EditBlog/EditBlog';
+import AdminHomePage from './Components/NormalAdmin/Admin';
+import SuperAdminHomePage from './Components/SuperAdmin/SuperAdmin';
 function App() {
   return (
     <div className="App">
-      <Router>
         <Routes>
           <Route path="" element={<Navigate to="/login"/>}/>
           <Route path='/login' element={<Login/>}></Route>
@@ -20,12 +21,13 @@ function App() {
           <Route path="/home" element={<Home/>}></Route>
           <Route path="/blog/:blog_id/:blog_title" element={<IndividualBlogDisplayer />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/profile/bookmarks" element={<Bookmarks />} />
           <Route path="/new-blog" element={<CreateBlog/>}/>
-          <Route path="/my-blogs" element={<MyBlogs />} />
+          <Route path="/profile/my-blogs" element={<MyBlogs />} />
           <Route path='/edit-post/:blog_id' element={<EditBlog/>}/>
+          <Route path='/admin' element={<AdminHomePage/>}/>
+          <Route path='/super-admin' element={<SuperAdminHomePage/>}/>
         </Routes>
-      </Router>
     </div>
   );
 }
