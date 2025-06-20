@@ -26,17 +26,20 @@ const Navbar = () => {
                     <h1 className="nav-link" onClick={() => {navigate("/home",{state:{userId}})}}>Home</h1>
                 </div>
                 <div className="nav-actions">
-                    <button 
-                        className="create-blog-nav-btn"
-                        onClick={() => navigate('/new-blog')}
-                        aria-label="Create new recipe blog"
-                    >
-                        <span className="button-icon">✏️</span>
-                        <span className="button-text">Write Recipe</span>
-                    </button>
+                    {localStorage.getItem("type")=="normal" && (
+                        <button 
+                            className="create-blog-nav-btn"
+                            onClick={() => navigate('/new-blog')}
+                            aria-label="Create new recipe blog"
+                        >
+                            <span className="button-icon">✏️</span>
+                            <span className="button-text">Write Recipe</span>
+                        </button>
+                    )}
+                    
                     <div onClick={toggle} className="profile-button">
                         <span className="profile-initial">P</span>
-                    </div>
+                    </div> 
                 </div>
             </div>
 

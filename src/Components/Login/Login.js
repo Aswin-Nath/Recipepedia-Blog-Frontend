@@ -6,11 +6,20 @@ import { useUser } from "../Contexts/ContextProvider";
 const Login = () => {
     const navigate=useNavigate();
     const {userId,loading,login}=useUser();
-    //     useEffect(() => {
-    //         if (userId) {
-    //         navigate("/home");
-    //     }
-    //     }, [userId, loading, navigate]);
+        useEffect(() => {
+            if (userId) {
+            const type=localStorage.getItem("type");
+            if(type=="normal"){
+            navigate("/home");
+            }
+            else if(type=="admin"){
+                navigate("/admin");
+            }
+            else{
+                navigate("/super-admin");
+            }
+        }
+        }, [userId, loading, navigate]);
     const [user_detail, setdetail] = useState("");
     const [password, setpassword] = useState("");
     const HandleLogin= async ()=>{

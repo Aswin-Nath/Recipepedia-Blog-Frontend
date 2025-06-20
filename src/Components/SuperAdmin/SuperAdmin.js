@@ -1,6 +1,9 @@
+import Navbar from "../Navbar/Navbar";
+
 const SuperAdminHomePage=()=>{
     return (
         <div>
+            <Navbar/>
             <h1>This is the SuperAdmin Page</h1>
         </div>
     )
