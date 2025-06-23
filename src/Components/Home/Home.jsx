@@ -13,7 +13,7 @@ const Home=()=>{
     return (
         <div>
             <Navbar/>
-            <HomeBlog user_id={1}/>
+            <HomeBlog/>
         </div>
     )
 };
