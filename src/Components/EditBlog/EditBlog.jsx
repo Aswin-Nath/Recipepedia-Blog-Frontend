@@ -54,7 +54,7 @@ const EditBlog = () => {
         const response=await axios.get(API);
 
         const urls=response.data.video_url;
-        if(response?.data?.video_url?.[0].length>0){
+        if(response?.data?.video_url?.[0]?.length>0){
             console.log(urls[0].length);
             setVideoUrl(urls[0]);   
         }
@@ -190,7 +190,7 @@ const EditBlog = () => {
         let tem=[];
         for(let i=0;i<validFiles.length;i++){
             const url=URL.createObjectURL(validFiles[i]);
-            tem.append({url:url,type:"new"});
+            tem.push({url:url,type:"new"});
         }
         setImagePreviews(prev => [...prev, ...tem]);
     };
@@ -207,7 +207,7 @@ const EditBlog = () => {
             images: prev.images.filter((_, i) => i !== index)
         }));
     };
-
+    
     const uploadImages = async () => {
         const uploadedUrls = [];
         setUploadProgress(0);
@@ -304,6 +304,7 @@ const handleSubmit = async (e) => {
         setUploadProgress(0);
     }
 };
+
 
     return (
         <div>
@@ -503,7 +504,7 @@ const handleSubmit = async (e) => {
                             {isSubmitting ? (
                                 <CircularProgress size={24} color="inherit" />
                             ) : (
-                                'Update Recipe'
+                                blog.status === "Draft" ? "Upload Recipe" : "Update Recipe"
                             )}
                         </Button>
                     </div>

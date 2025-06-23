@@ -1,18 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./IndividualHomeBlogDisplayer.css";
+import "../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer.css";
 
 const IndividualHomeDisplayer = ({ blog }) => {
   const navigate = useNavigate();
-  const { blog_id, title: blog_title, content: blog_content, categories } = blog;
-  
+  const { blog_id, title: blog_title, content: blog_content, categories,type } = blog;
+
   const handleReadMore = () => {
     const slug = blog_title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
-      
-    navigate(`/blog/${blog_id}/${slug}`);
+    console.log("DRAFT ID",blog_id);
+    navigate(`/draft/${blog_id}`);
   };
 
   const getContentPreview = (content) => {
@@ -26,7 +26,7 @@ const IndividualHomeDisplayer = ({ blog }) => {
         <div className="blog-header">
           <h2 className="blog-title">{blog_title}</h2>
           <button onClick={handleReadMore} className="read-more-btn">
-            Read More
+            {type=="Publish"?"Read More":"Finish"}
             <span className="arrow">→</span>
           </button>
         </div>

@@ -11,6 +11,9 @@ import MyBlogs from './Components/MyBlogs/MyBlogs';
 import EditBlog from './Components/EditBlog/EditBlog';
 import AdminHomePage from './Components/NormalAdmin/Admin';
 import SuperAdminHomePage from './Components/SuperAdmin/SuperAdmin';
+import MyDrafts from './Components/MyDrafts/MyDrafts';
+import IndividualDraftDisplayer from './Components/IndividualDraftDisplayer/IndividualDraftDisplayer';
+import IndividualHomeDisplayer from './Components/IndividualHomeDraftDisplayer/IndividualHomeDraftDisplayer';
 function App() {
   return (
     <div className="App">
@@ -20,6 +23,7 @@ function App() {
           <Route path='/signup' element={<Signup/>}></Route>
           <Route path="/home" element={<Home/>}></Route>
           <Route path="/blog/:blog_id/:blog_title" element={<IndividualBlogDisplayer />} />
+          <Route path="/draft/:blog_id/" element={<IndividualDraftDisplayer/>}/>
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/bookmarks" element={<Bookmarks />} />
           <Route path="/new-blog" element={<CreateBlog/>}/>
@@ -27,6 +31,7 @@ function App() {
           <Route path='/edit-post/:blog_id' element={<EditBlog/>}/>
           <Route path='/admin' element={<AdminHomePage/>}/>
           <Route path='/super-admin' element={<SuperAdminHomePage/>}/>
+          <Route path="/profile/drafts" element={<MyDrafts/>}/>
         </Routes>
     </div>
   );

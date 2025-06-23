@@ -33,6 +33,79 @@ const CreateBlog = () => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [blog_id,setblog_id]=useState(null);
     const [imagePreviews, setImagePreviews] = useState([]);
+    const [showScheduleFields, setShowScheduleFields] = useState(false);
+    const [scheduledDate, setScheduledDate] = useState('');
+    const [scheduledTime, setScheduledTime] = useState('');
+
+    const handleScheduleClick = () => {
+        setShowScheduleFields((prev) => !prev);
+    };
+
+    const handleScheduleSave = async () => {
+        if (scheduledDate && scheduledTime) {
+    try {
+        const validationErrors = validateForm();
+        
+        if (validationErrors.length > 0) {
+            setError(validationErrors.join(', '));
+            return;
+        }
+        setIsSubmitting(true);
+        setError('');
+        setSuccessMessage('');
+
+        let imageUrls = [];
+        if (formData.images.length > 0) {
+            imageUrls = await uploadImages();
+        }
+        const blogResponse = await axios.post('http://localhost:5000/api/blogs', {
+            title: formData.title.trim(),
+            content: formData.content.trim(),
+            user_id: userId,
+            difficulty: formData.difficulty,
+            ingredients: formData.ingredients,
+            categories: formData.categories,
+            type:postType
+        },{
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        }
+        );
+        setblog_id(blogResponse.data.blog_id);
+        if (imageUrls.length > 0) {
+            await Promise.all(imageUrls.map(url=>
+                axios.post('http://localhost:5000/api/blogs/images', {
+                    blog_id: blogResponse.data.blog_id,
+                    image_url: url
+                })
+            ));
+        }
+        if(videoUrl){
+            try{
+                const API="http://localhost:5000/api/blogs/videos";
+                axios.post(API,{blog_id:blogResponse.data.blog_id,video_url:videoUrl},{headers:{"Content-Type":"application/json"}});
+            }
+            catch(error){
+                console.log("error occured while adding",error.message);
+            }
+        }
+        await axios.post('http://localhost:5000/api/post/schedule_blog', {
+                blog_id:blogResponse.data.blog_id,
+                date: scheduledDate,
+                time: scheduledTime
+            });
+            setSuccessMessage('Blog scheduled successfully!');
+            setShowScheduleFields(false);
+            setTimeout(() => {
+                navigate('/home');
+            }, 1500);
+            } catch (error) {
+                setError('Failed to schedule blog: ' + (error.response?.data?.message || error.message));
+            }
+        }
+    };
+
     const [formData, setFormData] = useState({
         title: '',
         difficulty: '',
@@ -41,6 +114,7 @@ const CreateBlog = () => {
         content: '',
         images: []
     });
+    const [postType,setpostType]=useState("Publish");
 
     const difficultyLevels = ['Easy', 'Medium', 'Hard', 'Expert'];
     const categoryOptions = ['Indian', 'Italian', 'Chinese', 'Quick', 'Spicy', 'Vegetarian'];
@@ -191,6 +265,7 @@ const removeVideo = () => {
                 difficulty: formData.difficulty,
                 ingredients: formData.ingredients,
                 categories: formData.categories,
+                type:postType
             },{
                 headers:{
                     Authorization:`Bearer ${token}`
@@ -209,7 +284,7 @@ const removeVideo = () => {
             if(videoUrl){
                 try{
                     const API="http://localhost:5000/api/blogs/videos";
-                    axios.post(API,{blog_id:blog_id,video_url:videoUrl},{headers:{"Content-Type":"application/json"}});
+                    axios.post(API,{blog_id:blogResponse.data.blog_id,video_url:videoUrl},{headers:{"Content-Type":"application/json"}});
                 }
                 catch(error){
                     console.log("error occured while adding",error.message);
@@ -259,7 +334,7 @@ const removeVideo = () => {
                             ))}
                         </Select>
                     </FormControl>
-
+                    
                     <TextField
                         required
                         fullWidth
@@ -366,6 +441,9 @@ const removeVideo = () => {
                     </Button>
                 </label>
 
+                
+
+
                 {videoUploadProgress > 0 && (
                     <Box sx={{ width: '100%', mt: 2 }}>
                         <LinearProgress variant="determinate" value={videoUploadProgress} />
@@ -424,12 +502,108 @@ const removeVideo = () => {
                             color="primary"
                             disabled={isSubmitting}
                         >
-                            {isSubmitting ? (
+                            {isSubmitting && postType=="Publish" ? (
                                 <CircularProgress size={24} color="inherit" />
                             ) : (
                                 'Post Recipe'
                             )}
                         </Button>
+                        <Button
+                            type="submit" 
+                            variant="contained" 
+                            color="primary"
+                            disabled={isSubmitting}
+                            onClick={()=>{setpostType("Draft")}}
+                        >
+                            {isSubmitting ? (
+                                <CircularProgress size={24} color="inherit" />
+                            ) : (
+                                'Save as Draft'
+                            )}
+                        </Button>
+                            <Button
+                                type="button"
+                                variant="contained"
+                                color="secondary"
+                                disabled={isSubmitting}
+                                onClick={handleScheduleClick}
+                                style={{ marginLeft: 8 }}
+                            >
+                                &#128337; Schedule
+                            </Button>
+                           {showScheduleFields && (
+                            <Box
+                                sx={{
+                                    position: 'fixed',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100vw',
+                                    height: '100vh',
+                                    bgcolor: 'rgba(0,0,0,0.3)',
+                                    zIndex: 1300,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        bgcolor: 'background.paper',
+                                        p: 4,
+                                        borderRadius: 2,
+                                        boxShadow: 3,
+                                        minWidth: 320,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 2
+                                    }}
+                                >
+                                    <Typography variant="h6" sx={{ mb: 1 }}>Schedule Recipe Post</Typography>
+                                   <TextField
+                                        label="Date"
+                                        type="date"
+                                        size="small"
+                                        value={scheduledDate}
+                                        onChange={e => setScheduledDate(e.target.value)}
+                                        InputLabelProps={{ shrink: true }}
+                                        inputProps={{
+                                            min: new Date().toISOString().split('T')[0]
+                                        }}
+                                    />
+                                    <TextField
+                                        label="Time (24hr)"
+                                        type="time"
+                                        size="small"
+                                        value={scheduledTime}
+                                        onChange={e => setScheduledTime(e.target.value)}
+                                        InputLabelProps={{ shrink: true }}
+                                        inputProps={{
+                                            step: 60,
+                                            min: scheduledDate === new Date().toISOString().split('T')[0]
+                                                ? new Date().toTimeString().slice(0,5)
+                                                : undefined
+                                        }}
+                                    />
+                                    <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={handleScheduleSave}
+                                            disabled={!scheduledDate || !scheduledTime}
+                                        >
+                                            Save
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="secondary"
+                                            onClick={() => setShowScheduleFields(false)}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        )}
                     </div>
                 </form>
             </div>

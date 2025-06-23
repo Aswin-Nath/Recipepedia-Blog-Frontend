@@ -29,7 +29,7 @@ const LoadingSpinner = () => (
 const IndividualBlogDisplayer = () => {
   const {userId,loading}=useUser();
   const {blog_id}=useParams();
-
+  
   const [image_urls,setimage_url]=useState([]);
   const [video_url,setvideo_url]=useState("");
   const [blog,setblog]=useState({});
@@ -40,7 +40,9 @@ const IndividualBlogDisplayer = () => {
   const [like_status,setlike_status]=useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportReason, setReportReason] = useState('');
-
+  const [content_length,setcontent_length]=useState(0); 
+  const averageWPM = 200;
+  const [readTimeInMinutes,setReadtime]=useState(0);
   const handleReportClick = () => {
     setShowReportModal(true);
   };
@@ -49,7 +51,9 @@ const IndividualBlogDisplayer = () => {
       const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
       const response=await axios.get(API);
       setblog(response.data.blog[0]);
-      // console.log("BLOG",response.data);
+      console.log("BLOG",response.data.blog);
+      setcontent_length(response.data.blog[0].content.split(/\s+/).length);
+      setReadtime(Math.ceil(response.data.blog[0].content.split(/\s+/).length / averageWPM));
       setload(false);
     }
     fetchBlog();
@@ -171,6 +175,7 @@ const handleNextImage = () => {
 
   useEffect(()=>{
      const InitialCheck= async()=>{
+
       const data={
         user_id,blog_id
       }
@@ -178,6 +183,7 @@ const handleNextImage = () => {
       try{
         const response=await axios.get(API,{params:data})
         setloaded(true);
+        console.log("BOOKMARK",response.data);
         setBookmarked(response.data.message);
       }
       catch(error){
@@ -250,12 +256,14 @@ const handleNextImage = () => {
   if (loading || pageloading) {
       return <LoadingSpinner/>;
 }
+
   return (
     <div>
       <Navbar />
       <div className="full-blog-container">
         <div className="full-blog-card">
           <div className="blog-header">
+            <h3>Read time {readTimeInMinutes} Minutes</h3>
             <h1 className="blog-title-caps">{title.toUpperCase()}</h1>
             <div className="blog-header-right" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <span className="blog-date">

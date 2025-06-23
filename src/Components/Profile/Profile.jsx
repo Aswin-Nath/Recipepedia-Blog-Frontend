@@ -15,7 +15,9 @@ const Profile = () => {
     const handleBookmarks = () => {
         navigate('/profile/bookmarks');
     };
-
+    const handleDrafts=()=>{
+        navigate("/profile/drafts");
+    }
     const handleCreatePost = () => {
         navigate('/new-blog');
     };
@@ -52,6 +54,7 @@ return (
             <div className="action-buttons">
                 <button className="bookmark-btn" onClick={handleBookmarks}>Bookmarks</button>
                 <button className="create-post-btn" onClick={handleCreatePost}>Create a Post</button>
+                <button className='bookmark-btn' onClick={handleDrafts}>Drafted Posts</button>
             </div>
 
             <div className="activity-section">
@@ -63,6 +66,7 @@ return (
                     >
                         Blogs
                     </button>
+
                 </div>
 
                 {activeTab === "blogs" && (
