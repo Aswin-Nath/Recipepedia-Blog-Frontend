@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef } from "react";
 import "./IndividualBlogDisplayer.css";
 import Navbar from "../Navbar/Navbar";
 import Comment from "../Comment/Comment";
@@ -37,7 +37,7 @@ const IndividualBlogDisplayer = () => {
   const [bookmarked, setBookmarked] = useState(false);
   const [pageloading,setload]=useState(true);
   const [initially_liked,setInitial_liked]=useState(false);
-  const [like_status,setlike_status]=useState(false);
+  const [like_status,setlike_status]=useState(0);
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportReason, setReportReason] = useState('');
 
@@ -68,13 +68,13 @@ const IndividualBlogDisplayer = () => {
         console.log("DATA", { userId, blog_id: parseInt(blog_id) });
         const response=await axios.post(API,{userId,blog_id});
         const status=response.data.status;
-        console.log("STATUS",status)
+        console.log("STATUS",response.data.status)
         if(status==-1){
           return;
         }
         setInitial_liked(true);
         console.log("LIKE STATUS",status);
-        setlike_status(status);
+        setlike_status(1);
       }
       catch(error){
         console.log("Error occured while getting like status",error);
@@ -84,28 +84,33 @@ const IndividualBlogDisplayer = () => {
   },[userId,blog_id])
 
   
-  const handleLikeClick = async () => {
-    // Immediately update UI
-    const newLikeStatus = like_status === 1 ? 0 : 1;
-    setlike_status(newLikeStatus);
-    
-    const data = { userId, blog_id: parseInt(blog_id) };
-    try {
-      const API = initially_liked 
-        ? "http://127.0.0.1:5000/api/edit/blogs/likes/"
-        : "http://127.0.0.1:5000/api/add/blogs/likes/";
-      
-      if (initially_liked) {
-        await axios.put(API, data);
-      } else {
-        await axios.post(API, data);
-        setInitial_liked(true);
-      }
-    } catch (error) {
-      setlike_status(like_status);
-      console.error("Error updating like:", error);
+  const [isLiking, setIsLiking] = useState(false);
+
+const handleLikeClick = async () => {
+  if (isLiking) return;
+
+  setIsLiking(true);
+  const prevStatus = like_status;
+  const newLikeStatus = prevStatus === 1 ? 0 : 1;
+  setlike_status(newLikeStatus); // Optimistically update UI
+
+  const data = { userId, blog_id: parseInt(blog_id),newLikeStatus};
+  try {
+    if (initially_liked) {
+      // If initially liked, toggle like off or on
+      await axios.put("http://127.0.0.1:5000/api/edit/blogs/likes/", data);
+    } else {
+      await axios.post("http://127.0.0.1:5000/api/add/blogs/likes/", data);
+      setInitial_liked(true); // lock in that it's created now
     }
-  };
+  } catch (error) {
+    setlike_status(prevStatus); // rollback to old state
+    console.error("Error updating like:", error);
+  } finally {
+    setIsLiking(false);
+  }
+};
+
 
   const toggleBookmark = () => {
     setBookmarked(!bookmarked);
@@ -152,7 +157,9 @@ const handleNextImage = () => {
     difficulty
   } = blog;
 
-    const navigate = useNavigate();
+  // console.log("likes",likes);
+
+    const navigate = useNavigate(); 
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -176,7 +183,7 @@ const handleNextImage = () => {
      const InitialCheck= async()=>{
 
       const data={
-        user_id,blog_id
+        userId,blog_id
       }
       const API="http://127.0.0.1:5000/api/bookmark-checker";
       try{
@@ -190,7 +197,7 @@ const handleNextImage = () => {
       }
      };
      InitialCheck();
-  },[user_id,blog_id])
+  },[userId,blog_id])
 
 
   useEffect(()=>{
@@ -230,26 +237,33 @@ const handleNextImage = () => {
     fetchVideos();
   },[blog_id]);
 
-  useEffect(()=>{
-    if(!loaded){
-      return;
+const firstLoadRef = useRef(true);
+
+useEffect(() => {
+  if (!loaded || firstLoadRef.current) {
+    firstLoadRef.current = false;
+    return;
+  }
+
+  const updateBookMark = async () => {
+    const data = {
+      user_id: userId,
+      blog_id: blog_id,
+      condition: bookmarked
+    };
+    const API = "http://127.0.0.1:5000/api/add/bookmark";
+    try {
+      await axios.post(API, data, {
+        headers: { "Content-Type": "application/json" }
+      });
+    } catch (error) {
+      console.log("Error occurred", error.message);
     }
-    const updateBookMark=async ()=>{
-      const data={
-        "user_id":user_id,
-        "blog_id":blog_id,
-        "condition":bookmarked
-      }
-      const API="http://127.0.0.1:5000/api/add/bookmark";
-      try{
-      await axios.post(API,data,{headers:{"Content-Type":"application/json"}})
-      }
-      catch(error){
-        console.log("Error occured",error.message);
-      }
-    }
-    updateBookMark();
-  },[bookmarked,user_id,blog_id,loaded])
+  };
+
+  updateBookMark();
+}, [bookmarked, userId, blog_id, loaded]);
+
   const difficultyLevel = difficulty;
 
   if (loading || pageloading) {
@@ -259,6 +273,7 @@ const handleNextImage = () => {
   return (
     <div>
       <Navbar />
+
       <div className="full-blog-container">
         <div className="full-blog-card">
           <div className="blog-header">
@@ -271,10 +286,11 @@ const handleNextImage = () => {
               <span 
                 className="heart-icon" 
                 onClick={handleLikeClick}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: isLiking ? 'not-allowed' : 'pointer', opacity: isLiking ? 0.5 : 1 }}
               >
-                {like_status === 1 ? "❤️" : "🤍"} {likes + like_status}
+                {like_status === 1 ? "❤️" : "🤍"} {likes +(initially_liked==true?0:(like_status ==1 ? 1 : 0))} 
               </span>
+
               <span className="difficulty-level">{difficultyLevel}</span>
 
               <span
@@ -331,7 +347,7 @@ const handleNextImage = () => {
                         onClick={async () => {
                           const API="http://127.0.0.1:5000/api/post/report-posts";
                           const data={
-                            user_id,blog_id,reportReason,
+                            userId,blog_id,reportReason,
                           }
                           try{
                             await axios.post(API,data,{headers:{'Content-Type':"application/json"}})

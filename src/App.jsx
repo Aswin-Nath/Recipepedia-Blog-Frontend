@@ -15,6 +15,7 @@ import MyDrafts from './Components/MyDrafts/MyDrafts';
 import IndividualDraftDisplayer from './Components/IndividualDraftDisplayer/IndividualDraftDisplayer';
 import MyScheduledBlogs from './Components/MyScheduledBlogs/MyScheduledBlogs';
 import IndividualScheduleBlogDisplayer from './Components/IndividualScheduledBlogDisplayer/IndividualScheduledBlogDisplayer';
+import Network from './Components/Network/Network';
 function App() {
   return (
     <div className="App">
@@ -35,7 +36,7 @@ function App() {
           <Route path="/profile/drafts" element={<MyDrafts/>}/>
           <Route path="/profile/schedule" element={<MyScheduledBlogs/>}/>
           <Route path="/scheduled/:blog_id" element={<IndividualScheduleBlogDisplayer/>}/>
-
+          <Route path="/network" element={<Network/>}/>
         </Routes>
     </div>
   );

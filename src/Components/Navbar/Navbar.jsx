@@ -24,6 +24,7 @@ const Navbar = () => {
                 <div className="content-displayer">
                     <h1 className="brand">Recipepedia</h1>
                     <h1 className="nav-link" onClick={() => {navigate("/home",{state:{userId}})}}>Home</h1>
+                    <h1 className="nav-link" onClick={() => {navigate("/network")}}>Network</h1>
                 </div>
                 <div className="nav-actions">
                     {localStorage.getItem("type")=="normal" && (

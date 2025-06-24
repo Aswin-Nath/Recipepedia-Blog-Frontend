@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import "./Comment.css";
+import { useUser } from "../Contexts/ContextProvider";
 
 const Comments = ({ blog_id, user_id }) => {
+  const {userId}=useUser();
   const [ParentData, setParentData] = useState([]);
   const [Parent_to_child, setParent_to_child] = useState(new Map());
   const [addcomment, setaddcomment] = useState("");
@@ -15,6 +17,7 @@ const Comments = ({ blog_id, user_id }) => {
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+  console.log(blog_id,userId);
 
   const handleReport = (comment_id) => {
     setCurrentCommentId(comment_id); // Store the comment ID being reported
@@ -214,7 +217,7 @@ const Comments = ({ blog_id, user_id }) => {
         API,
         {
           blog_id,
-          user_id,
+          userId,
           content: current_addcomment,
           parent_id,
         },
@@ -357,7 +360,7 @@ const Comments = ({ blog_id, user_id }) => {
                   const API =
                     "http://127.0.0.1:5000/api/post/report-comments";
                   const data = {
-                    user_id,
+                    userId,
                     blog_id,
                     reportReason,
                     comment_id: currentCommentId,
