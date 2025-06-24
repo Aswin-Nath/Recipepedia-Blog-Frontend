@@ -1,8 +1,5 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer.css";
-
-const IndividualHomeDraftDisplayer = ({ blog }) => {
+const IndividualHomeScheduledBlogDisplayer= ({ blog }) => {
   const navigate = useNavigate();
   const { blog_id, title: blog_title, content: blog_content, categories,type } = blog;
 
@@ -12,14 +9,14 @@ const IndividualHomeDraftDisplayer = ({ blog }) => {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
     console.log("DRAFT ID",blog_id);
-    navigate(`/draft/${blog_id}`);
+    navigate(`/scheduled/${blog_id}`);
   };
 
   const getContentPreview = (content) => {
     const words = content.split(' ').slice(0, 50); 
     return words.join(' ') + (words.length >= 50 ? '...' : '');
   };
-
+  
   return (
     <div className="blog-container">
       <div className="blog-card">
@@ -52,5 +49,4 @@ const IndividualHomeDraftDisplayer = ({ blog }) => {
     </div>
   );
 };
-
-export default IndividualHomeDraftDisplayer;
+export default IndividualHomeScheduledBlogDisplayer;

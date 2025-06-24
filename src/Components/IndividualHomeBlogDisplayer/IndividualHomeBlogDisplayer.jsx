@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./IndividualHomeBlogDisplayer.css";
 
-const IndividualHomeDisplayer = ({ blog }) => {
+const IndividualHomeBlogDisplayer = ({ blog }) => {
   const navigate = useNavigate();
   const { blog_id, title: blog_title, content: blog_content, categories } = blog;
   
@@ -53,4 +53,4 @@ const IndividualHomeDisplayer = ({ blog }) => {
   );
 };
 
-export default IndividualHomeDisplayer;
+export default IndividualHomeBlogDisplayer;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { data, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import CreateBlogNavbar from "../CreateBlogNavbar/CreateBlogNavbar";
 import { 
@@ -21,14 +21,45 @@ import VideoFileIcon from '@mui/icons-material/VideoFile';
 import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
 import './EditBlog.css';
-
+import { useUser } from '../Contexts/ContextProvider';
 const EditBlog = () => {
     const navigate = useNavigate();
+    const {userId}=useUser();
+
     const [image_urls,set_image_urls]=useState([]);
     const { blog_id } = useParams();
     const [blog,setBlog]=useState([]);
     const [videoUrl, setVideoUrl] = useState('');
+    const [date,setdate]=useState("");
+    const [time,settime]=useState("");
     const [videoUploadProgress, setVideoUploadProgress] = useState(0);
+    const [showScheduleFields, setShowScheduleFields] = useState(false);
+    const [scheduledDate, setScheduledDate] = useState('');
+    const [scheduledTime, setScheduledTime] = useState('');
+    const [type,settype]=useState("Draft");
+    
+        const handleScheduleClick = () => {
+            setShowScheduleFields((prev) => !prev);
+        };
+    
+        const handleScheduleSave = async () => {
+            if (scheduledDate && scheduledTime) {
+                try {
+                    
+                    await axios.post('http://localhost:5000/api/post/schedule_blog', {
+                            blog_id,
+                            date: scheduledDate,
+                            time: scheduledTime
+                        });
+                    setShowScheduleFields(false);
+                    settype("Hold");
+                    console.log("HOLD",type);
+                } catch (error) {
+                    setError('Failed to schedule blog: ' + (error.response?.data?.message || error.message));
+                }
+            }
+        };
+    
     // const []
       useEffect(()=>{
     const fetchImages= async ()=>{
@@ -65,12 +96,19 @@ const EditBlog = () => {
     }
     fetchVideos();
   },[blog_id]);
+  
     useEffect(()=>{
         const fetchBlogData=async ()=>{
             try{
                 const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
                 const response=await axios.get(API);
                 setBlog(response.data.blog[0]);
+                if(response.data.blog[0].status=="Hold"){
+                    const time_date_response=await axios.get("http://127.0.0.1:5000/api/get/scheduled_time",{params:{blog_id}});
+                    setdate(time_date_response.data.date);
+                    settime(time_date_response.data.time);
+                    console.log(time_date_response.data.date,time_date_response.data.time);
+                }
             }
             catch(error){
                 console.log("Error occured while fetching Blog data",error);
@@ -245,7 +283,8 @@ const EditBlog = () => {
         if (formData.ingredients.length === 0) errors.push('At least one ingredient is required');
         return errors;
     };
-const handleSubmit = async (e) => {
+const handleSubmit = async (e,athu) => {
+    console.log(athu);
     e.preventDefault();
     const validationErrors = validateForm();
     
@@ -266,7 +305,8 @@ const handleSubmit = async (e) => {
             content: formData.content.trim(),
             difficulty: formData.difficulty,
             ingredients: formData.ingredients,
-            categories: formData.categories
+            categories: formData.categories,
+            status:athu
         });
 
         let imageUrls = [];
@@ -305,12 +345,29 @@ const handleSubmit = async (e) => {
     }
 };
 
-
     return (
         <div>
             <CreateBlogNavbar/>
             <div className="create-post-container">
+            <div className='time-displayer'>
+                {blog.status === "Hold" && (
+                <div>
+                    <h1>Scheduled on</h1>
+                    <h3>{new Date(date).toLocaleDateString('en-IN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                    })}</h3>
+                    <h3>{new Date(`1970-01-01T${time}`).toLocaleTimeString('en-IN', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                    })}</h3>
+                </div>
+                )}
+            </div>
                 <h1>Edit Recipe</h1>
+                        
                 <form  className="recipe-form">
                     <TextField
                         required
@@ -484,7 +541,7 @@ const handleSubmit = async (e) => {
 
                     {error && <Alert severity="error" className="alert">{error}</Alert>}
                     {successMessage && <Alert severity="success" className="alert">{successMessage}</Alert>}
-
+                    
                     <div className="form-actions">
                         <Button 
                             type="button" 
@@ -497,7 +554,11 @@ const handleSubmit = async (e) => {
                         <Button 
                             type="submit" 
                             variant="contained" 
-                            onClick={handleSubmit}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const statusToSend = blog.status === "Draft" ? (type=="Draft"?"Publish":"Hold") : blog.status;
+                                handleSubmit(e, statusToSend);
+                            }}
                             color="primary"
                             disabled={isSubmitting}
                         >
@@ -507,6 +568,95 @@ const handleSubmit = async (e) => {
                                 blog.status === "Draft" ? "Upload Recipe" : "Update Recipe"
                             )}
                         </Button>
+    
+
+                        <Button
+                            type="button"
+                            variant="contained"
+                            color="secondary"
+                            disabled={isSubmitting}
+                            onClick={handleScheduleClick}
+                            style={{ marginLeft: 8 }}
+                        >
+                            &#128337; Schedule
+                        </Button>
+                        {showScheduleFields && (
+                        <Box
+                            sx={{
+                                position: 'fixed',
+                                top: 0,
+                                left: 0,
+                                width: '100vw',
+                                height: '100vh',
+                                bgcolor: 'rgba(0,0,0,0.3)',
+                                zIndex: 1300,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    bgcolor: 'background.paper',
+                                    p: 4,
+                                    borderRadius: 2,
+                                    boxShadow: 3,
+                                    minWidth: 320,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 2
+                                }}
+                            >
+                                <Typography variant="h6" sx={{ mb: 1 }}>Schedule Recipe Post</Typography>
+                                <TextField
+                                    label="Date"
+                                    type="date"
+                                    size="small"
+                                    value={scheduledDate}
+                                    onChange={e => setScheduledDate(e.target.value)}
+                                    InputLabelProps={{ shrink: true }}
+                                    inputProps={{
+                                        min: new Date().toISOString().split('T')[0]
+                                    }}
+                                />
+                                <TextField
+                                    label="Time (24hr)"
+                                    type="time"
+                                    size="small"
+                                    value={scheduledTime}
+                                    onChange={e => setScheduledTime(e.target.value)}
+                                    InputLabelProps={{ shrink: true }}
+                                    inputProps={{
+                                        step: 60,
+                                        min: scheduledDate === new Date().toISOString().split('T')[0]
+                                            ? new Date().toTimeString().slice(0,5)
+                                            : undefined
+                                    }}
+                                />
+                                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={()=>{
+                                            setdate(scheduledDate);
+                                            settime(scheduledTime);
+                                            handleScheduleSave();
+                                        }}
+                                        disabled={!scheduledDate || !scheduledTime}
+                                    >
+                                        Save
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        onClick={() => setShowScheduleFields(false)}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Box>
+                    )}
                     </div>
                 </form>
             </div>

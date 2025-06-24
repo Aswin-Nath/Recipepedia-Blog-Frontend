@@ -65,7 +65,7 @@ const CreateBlog = () => {
             difficulty: formData.difficulty,
             ingredients: formData.ingredients,
             categories: formData.categories,
-            type:postType
+            type:"Hold",
         },{
             headers:{
                 Authorization:`Bearer ${token}`

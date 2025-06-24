@@ -1,8 +1,8 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { useState,useEffect } from "react";
-import "./IndividualBlogDisplayer.css";
+import "../IndividualBlogDisplayer/IndividualBlogDisplayer.css";
 import Navbar from "../Navbar/Navbar";
-import Comment from "../Comment/Comment";
 import axios from "axios";
 import { useUser } from "../Contexts/ContextProvider";
 const LoadingSpinner = () => (
@@ -25,91 +25,63 @@ const LoadingSpinner = () => (
     <p style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Loading recipe...</p>
   </div>
 );
-
-const IndividualBlogDisplayer = () => {
+const IndividualScheduleBlogDisplayer= () => {
   const {userId,loading}=useUser();
   const {blog_id}=useParams();
   
   const [image_urls,setimage_url]=useState([]);
   const [video_url,setvideo_url]=useState("");
-  const [blog,setblog]=useState({});
-  const [loaded,setloaded]=useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
-  const [pageloading,setload]=useState(true);
-  const [initially_liked,setInitial_liked]=useState(false);
-  const [like_status,setlike_status]=useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
-  const [reportReason, setReportReason] = useState('');
+  const [blog,setBlog]=useState({});
 
+  const [pageloading,setload]=useState(true);
   const averageWPM = 200;
   const [readTimeInMinutes,setReadtime]=useState(0);
-  const handleReportClick = () => {
-    setShowReportModal(true);
-  };
+    const [difficultyLevel,setDifficulty]=useState("");
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [ingredients, setIngredients] = useState([]);
+    const [createdAt, setCreatedAt] = useState('');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
+    const [authorId, setAuthorId] = useState('');
+
   useEffect(()=>{
-    const fetchBlog=async ()=>{
-      const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
-      const response=await axios.get(API);
-      setblog(response.data.blog[0]);
-      console.log("BLOG",response.data.blog);
-      setReadtime(Math.ceil(response.data.blog[0].content.split(/\s+/).length / averageWPM));
-      setload(false);
-    }
+    const fetchBlog = async () => {
+        const API = `http://127.0.0.1:5000/api/get/scheduled_blog`;
+        const response = await axios.get(API, { params: { blog_id } });
+        console.log(response,blog_id);
+        const blogData = response.data?.scheduled_blog // corrected key
+        console.log("BLOG",blogData);
+        if (!blogData) {
+            console.error("No blog data found");
+            return;
+        }
+
+        setBlog(blogData);
+        console.log("BLOGOOMBU", blogData);
+
+        setTitle(blogData.title || '');
+        setContent(blogData.content || '');
+        setCategories(blogData.categories || []);
+        setIngredients(blogData.ingredients || []);
+        setCreatedAt(blogData.createdat || '');
+        setDifficulty(blogData.difficulty || '');
+        setDate(blogData.date || '');
+        setTime(blogData.time || '');
+        setAuthorId(blogData.user_id || '');
+
+        const wordCount = blogData.content?.split(/\s+/).length || 0;
+        setReadtime(Math.ceil(wordCount / averageWPM));
+        setload(false);
+        };
+
     fetchBlog();
   },[blog_id])
 
-  useEffect(()=>{
-    if(loading){
-      return;
-    }
-    const API="http://127.0.0.1:5000/api/get/blogs/likes";
-    const fetchLikeStatus=async ()=>{
-      try{
-        console.log("DATA", { userId, blog_id: parseInt(blog_id) });
-        const response=await axios.post(API,{userId,blog_id});
-        const status=response.data.status;
-        console.log("STATUS",status)
-        if(status==-1){
-          return;
-        }
-        setInitial_liked(true);
-        console.log("LIKE STATUS",status);
-        setlike_status(status);
-      }
-      catch(error){
-        console.log("Error occured while getting like status",error);
-      }
-    }
-    fetchLikeStatus();
-  },[userId,blog_id])
+
 
   
-  const handleLikeClick = async () => {
-    // Immediately update UI
-    const newLikeStatus = like_status === 1 ? 0 : 1;
-    setlike_status(newLikeStatus);
-    
-    const data = { userId, blog_id: parseInt(blog_id) };
-    try {
-      const API = initially_liked 
-        ? "http://127.0.0.1:5000/api/edit/blogs/likes/"
-        : "http://127.0.0.1:5000/api/add/blogs/likes/";
-      
-      if (initially_liked) {
-        await axios.put(API, data);
-      } else {
-        await axios.post(API, data);
-        setInitial_liked(true);
-      }
-    } catch (error) {
-      setlike_status(like_status);
-      console.error("Error updating like:", error);
-    }
-  };
-
-  const toggleBookmark = () => {
-    setBookmarked(!bookmarked);
-  };
 
   const [selectedImage, setSelectedImage] = useState(null);
 const [overlayActive, setOverlayActive] = useState(false);
@@ -141,16 +113,7 @@ const handleNextImage = () => {
     });
   }
 };
-  const {
-    title,
-    content,
-    categories,
-    ingredients,
-    likes,
-    createdat,
-    user_id,
-    difficulty
-  } = blog;
+ 
 
     const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -172,25 +135,6 @@ const handleNextImage = () => {
     }
   };
 
-  useEffect(()=>{
-     const InitialCheck= async()=>{
-
-      const data={
-        user_id,blog_id
-      }
-      const API="http://127.0.0.1:5000/api/bookmark-checker";
-      try{
-        const response=await axios.get(API,{params:data})
-        setloaded(true);
-        console.log("BOOKMARK",response.data);
-        setBookmarked(response.data.message);
-      }
-      catch(error){
-        console.log("Error occured",error.message);
-      }
-     };
-     InitialCheck();
-  },[user_id,blog_id])
 
 
   useEffect(()=>{
@@ -209,9 +153,6 @@ const handleNextImage = () => {
     fetchImages();
   },[blog_id])
 
-  const toggleMenu=()=>{
-
-  }
 
   useEffect(()=>{
     const fetchVideos=async ()=>{
@@ -230,32 +171,11 @@ const handleNextImage = () => {
     fetchVideos();
   },[blog_id]);
 
-  useEffect(()=>{
-    if(!loaded){
-      return;
-    }
-    const updateBookMark=async ()=>{
-      const data={
-        "user_id":user_id,
-        "blog_id":blog_id,
-        "condition":bookmarked
-      }
-      const API="http://127.0.0.1:5000/api/add/bookmark";
-      try{
-      await axios.post(API,data,{headers:{"Content-Type":"application/json"}})
-      }
-      catch(error){
-        console.log("Error occured",error.message);
-      }
-    }
-    updateBookMark();
-  },[bookmarked,user_id,blog_id,loaded])
-  const difficultyLevel = difficulty;
+
 
   if (loading || pageloading) {
       return <LoadingSpinner/>;
 }
-
   return (
     <div>
       <Navbar />
@@ -266,100 +186,11 @@ const handleNextImage = () => {
             <h1 className="blog-title-caps">{title.toUpperCase()}</h1>
             <div className="blog-header-right" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <span className="blog-date">
-                {new Date(createdat).toLocaleDateString()}
+               Scheduled at: {new Date(createdAt).toLocaleDateString()} {time}
               </span>
-              <span 
-                className="heart-icon" 
-                onClick={handleLikeClick}
-                style={{ cursor: 'pointer' }}
-              >
-                {like_status === 1 ? "❤️" : "🤍"} {likes + like_status}
-              </span>
+
               <span className="difficulty-level">{difficultyLevel}</span>
 
-              <span
-                onClick={toggleBookmark}
-                role="button"
-                title={bookmarked ? "Bookmarked" : "Add to Bookmarks"}
-                aria-label={bookmarked ? "Remove bookmark" : "Add bookmark"}
-                style={{
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "50%",
-                  backgroundColor: bookmarked ? "gold" : "white",
-                  transition: "all 0.3s ease",
-                  border: bookmarked ? "2px solid black" : "2px solid #aaa",
-                  boxShadow: bookmarked ? "0 0 8px rgba(0,0,0,0.6)" : "0 0 3px rgba(0,0,0,0.3)",
-                  marginLeft: "8px"
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="22"
-                  viewBox="0 0 14 18"
-                  fill={bookmarked ? "black" : "black"}
-                  stroke={bookmarked ? "black" : "black"}
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M2 1h10v16l-5-3-5 3V1z" />
-                </svg>
-              </span>
-              <div className="report-blog">
-                <span className="report-icon" onClick={handleReportClick}>
-                  <i className="fas fa-flag"></i> {/* Font Awesome flag icon */}
-                </span>
-              </div>
-                {/* Have to Send user_id,post_id,reason */}
-              {showReportModal && (
-                <div className="report-overlay">
-                  <div className="report-modal">
-                    <h3>Report Content</h3>
-                    <textarea
-                      value={reportReason}
-                      onChange={(e) => setReportReason(e.target.value)}
-                      placeholder="Please provide a reason for reporting..."
-                    />
-                    <div className="modal-actions">
-                      <button 
-                        onClick={async () => {
-                          const API="http://127.0.0.1:5000/api/post/report-posts";
-                          const data={
-                            user_id,blog_id,reportReason,
-                          }
-                          try{
-                            await axios.post(API,data,{headers:{'Content-Type':"application/json"}})
-                            alert("Reported");
-                            console.log('Report submitted:', reportReason);
-                            setShowReportModal(false);
-                            setReportReason('');
-                          }
-                          catch(error){
-                            alert("Error occured while adding the Report",error.message);
-                          }
-                        }}
-                      >
-                        Submit
-                      </button>
-                      <button 
-                        onClick={() => {
-                          setShowReportModal(false);
-                          setReportReason('');
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
               {!loading && userId === blog.user_id && ( 
                 <div>
                               <span
@@ -550,12 +381,10 @@ const handleNextImage = () => {
             </div>
           </div>
 
-          <Comment blog_id={blog_id} user_id={user_id} />
 
         </div>
       </div>
     </div>
   );
 };
-
-export default IndividualBlogDisplayer;
+export default IndividualScheduleBlogDisplayer

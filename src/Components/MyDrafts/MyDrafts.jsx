@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useUser } from "../Contexts/ContextProvider";
 import axios from "axios";
 import '../MyBlogs/MyBlogs.css';
-import IndividualDraftDisplayer from "../IndividualDraftDisplayer/IndividualDraftDisplayer";
-import IndividualHomeDisplayer from "../IndividualHomeDraftDisplayer/IndividualHomeDraftDisplayer";
+// import IndividualDraftDisplayer from "../IndividualDraftDisplayer/IndividualDraftDisplayer";
+// import IndividualHomeDisplayer from "../IndividualHomeDraftDisplayer/IndividualHomeDraftDisplayer";
+import IndividualHomeDraftDisplayer from "../IndividualHomeDraftDisplayer/IndividualHomeDraftDisplayer";
 import Navbar from "../Navbar/Navbar";
 const MyDrafts=()=>{
     const {loading,  userId}=useUser();
@@ -33,7 +34,7 @@ const MyDrafts=()=>{
                 <h1>All My Drafts</h1>
                 <div className="posts-grid">
                     {userId && Drafts && Drafts.map((draft) => (
-                        <IndividualHomeDisplayer key={draft.blog_id} blog={draft}/>
+                        <IndividualHomeDraftDisplayer key={draft.blog_id} blog={draft}/>
                     ))}
                 </div>
             </div>

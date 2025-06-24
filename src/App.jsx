@@ -13,7 +13,8 @@ import AdminHomePage from './Components/NormalAdmin/Admin';
 import SuperAdminHomePage from './Components/SuperAdmin/SuperAdmin';
 import MyDrafts from './Components/MyDrafts/MyDrafts';
 import IndividualDraftDisplayer from './Components/IndividualDraftDisplayer/IndividualDraftDisplayer';
-import IndividualHomeDisplayer from './Components/IndividualHomeDraftDisplayer/IndividualHomeDraftDisplayer';
+import MyScheduledBlogs from './Components/MyScheduledBlogs/MyScheduledBlogs';
+import IndividualScheduleBlogDisplayer from './Components/IndividualScheduledBlogDisplayer/IndividualScheduledBlogDisplayer';
 function App() {
   return (
     <div className="App">
@@ -32,6 +33,9 @@ function App() {
           <Route path='/admin' element={<AdminHomePage/>}/>
           <Route path='/super-admin' element={<SuperAdminHomePage/>}/>
           <Route path="/profile/drafts" element={<MyDrafts/>}/>
+          <Route path="/profile/schedule" element={<MyScheduledBlogs/>}/>
+          <Route path="/scheduled/:blog_id" element={<IndividualScheduleBlogDisplayer/>}/>
+
         </Routes>
     </div>
   );

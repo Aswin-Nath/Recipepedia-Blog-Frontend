@@ -18,6 +18,9 @@ const Profile = () => {
     const handleDrafts=()=>{
         navigate("/profile/drafts");
     }
+    const handleSchedule=()=>{
+        navigate("/profile/schedule");
+    }
     const handleCreatePost = () => {
         navigate('/new-blog');
     };
@@ -55,6 +58,7 @@ return (
                 <button className="bookmark-btn" onClick={handleBookmarks}>Bookmarks</button>
                 <button className="create-post-btn" onClick={handleCreatePost}>Create a Post</button>
                 <button className='bookmark-btn' onClick={handleDrafts}>Drafted Posts</button>
+                <button className='bookmark-btn' onClick={handleSchedule}>Scheduled Posts</button>
             </div>
 
             <div className="activity-section">

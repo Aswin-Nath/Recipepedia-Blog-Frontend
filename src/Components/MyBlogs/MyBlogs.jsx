@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from "../Navbar/Navbar";
 import { useUser } from '../Contexts/ContextProvider';
 import axios from 'axios';
-import IndividualHomeDisplayer from '../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer';
+import IndividualHomeBlogDisplayer from '../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer';
 import './MyBlogs.css';
 const MyBlogs = () => {
     const { userId, loading } = useUser();
@@ -38,7 +38,7 @@ const MyBlogs = () => {
                 <h1>All My Blogs</h1>
                 <div className="posts-grid">
                     {blogs.map((blog) => (
-                        <IndividualHomeDisplayer key={blog.blog_id} blog={blog} />
+                        <IndividualHomeBlogDisplayer key={blog.blog_id} blog={blog} />
                     ))}
                 </div>
             </div>

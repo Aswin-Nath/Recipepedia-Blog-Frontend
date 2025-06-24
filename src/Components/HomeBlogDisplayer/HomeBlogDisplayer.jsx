@@ -1,6 +1,6 @@
 import {useEffect,useState} from "react";
 import axios from "axios";
-import IndividualHomeDisplayer from "../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer";
+import IndividualHomeBlogDisplayer from "../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer";
 const HomeBlog=()=>{
     const [blogs,setblogs]=useState([]);
 
@@ -22,7 +22,7 @@ useEffect(() => {
         <div>
             { blogs && (
                  blogs.map((blog,index)=>{
-                    return <IndividualHomeDisplayer key={blog.blog_id} blog={blog}/>
+                    return <IndividualHomeBlogDisplayer key={blog.blog_id} blog={blog}/>
                 })
             )
             }
