@@ -1,21 +1,22 @@
 import './App.css';
 import { BrowserRouter as Router,Routes,Route, Navigate } from 'react-router-dom';
-import Login from './Components/Login/Login';
-import Signup from './Components/Signup/Signup';
-import Home from './Components/Home/Home';
-import IndividualBlogDisplayer from './Components/IndividualBlogDisplayer/IndividualBlogDisplayer';
-import Profile from './Components/Profile/Profile';
+import Login from './Components/Auth/Login/Login';
+import Signup from './Components/Auth/Signup/Signup';
+import Home from './Components/HomePages/Home/Home';
+import IndividualBlogDisplayer from './Components/Displayer/IndividualBlogDisplayer/IndividualBlogDisplayer';
+import Profile from './Components/ProfileSection/Profile/Profile';
 import Bookmarks from './Components/Bookmarks/Bookmarks';
-import CreateBlog from './Components/CreateBlog/CreateBlog';
-import MyBlogs from './Components/MyBlogs/MyBlogs';
-import EditBlog from './Components/EditBlog/EditBlog';
-import AdminHomePage from './Components/NormalAdmin/Admin';
-import SuperAdminHomePage from './Components/SuperAdmin/SuperAdmin';
-import MyDrafts from './Components/MyDrafts/MyDrafts';
-import IndividualDraftDisplayer from './Components/IndividualDraftDisplayer/IndividualDraftDisplayer';
-import MyScheduledBlogs from './Components/MyScheduledBlogs/MyScheduledBlogs';
-import IndividualScheduleBlogDisplayer from './Components/IndividualScheduledBlogDisplayer/IndividualScheduledBlogDisplayer';
-import Network from './Components/Network/Network';
+import CreateBlog from './Components/Creater/CreateBlog/CreateBlog';
+// import MyBlogs from './Components/ProfileSection/Profile/MyBlogs/MyBlogs';
+import MyBlogs from './Components/ProfileSection/MyBlogs/MyBlogs';
+import EditBlog from './Components/Editor/EditBlog/EditBlog';
+import AdminHomePage from './Components/HomePages/NormalAdmin/Admin';
+import SuperAdminHomePage from './Components/HomePages/SuperAdmin/SuperAdmin';
+import MyDrafts from './Components/ProfileSection/MyDrafts/MyDrafts';
+import IndividualDraftDisplayer from './Components/Displayer/IndividualDraftDisplayer/IndividualDraftDisplayer';
+import MyScheduledBlogs from './Components//ProfileSection/MyScheduledBlogs/MyScheduledBlogs';
+import IndividualScheduleBlogDisplayer from './Components/Displayer/IndividualScheduledBlogDisplayer/IndividualScheduledBlogDisplayer';
+import Network from './Components/NetworkPage/Network/Network';
 function App() {
   return (
     <div className="App">

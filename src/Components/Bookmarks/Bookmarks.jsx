@@ -1,8 +1,8 @@
-import Navbar from "../Navbar/Navbar";
+import Navbar from "../Navbars/Navbar/Navbar";
 import { useUser } from "../Contexts/ContextProvider";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import IndividualHomeDisplayer from "../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer";
+import IndividualHomeDisplayer from "../OutsideDisplayer/IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer";
 import { useNavigate } from "react-router-dom";
 const Bookmarks = () => {
     const {loading,userId}=useUser();
