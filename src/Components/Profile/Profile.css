@@ -34,13 +34,21 @@
 }
 
 .create-post-btn {
-  background-color: #0081ff;
-  color: white;
+  margin-left: auto;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: a ll 0.2s ease;
 }
 
 .create-post-btn:hover {
-  background-color: #0066cc;
+  background-color: #0081ff;
 }
+
+
+
 
 .activity-section {
   background: white;
@@ -54,13 +62,16 @@
   color: #333;
   margin-bottom: 24px;
 }
-
 .activity-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 24px;
   border-bottom: 2px solid #f0f0f0;
+  gap: 8px;
 }
 
-.activity-tabs button {
+.activity-tabs button:not(.create-post-btn) {
   padding: 12px 24px;
   background: none;
   border: none;
@@ -70,11 +81,11 @@
   position: relative;
 }
 
-.activity-tabs button.active {
+.activity-tabs button.active:not(.create-post-btn) {
   color: #0081ff;
 }
 
-.activity-tabs button.active::after {
+.activity-tabs button.active:not(.create-post-btn)::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -83,6 +94,7 @@
   height: 2px;
   background-color: #0081ff;
 }
+
 
 .posts-grid {
   display: grid;

@@ -65,11 +65,11 @@ const Suggestions = () => {
             {suggestions.map((user) => (
               <ListItem key={user.user_id} secondaryAction={
                 <Button variant="contained" size="small" onClick={() => handleConnect(user.user_id)}>
-                  Connect
+                  Follow
                 </Button>
               }>
                 <ListItemAvatar>
-                  <Avatar src={user.avatar || "https://via.placeholder.com/150"} />
+                  <Avatar src={user.avatar} />
                 </ListItemAvatar>
                 <ListItemText primary={user.user_name} />
               </ListItem>

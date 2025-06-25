@@ -117,7 +117,7 @@ const handleLikeClick = async () => {
   };
 
   const [selectedImage, setSelectedImage] = useState(null);
-const [overlayActive, setOverlayActive] = useState(false);
+  const [overlayActive, setOverlayActive] = useState(false);
 
 const handleImageClick = (imageUrl, index) => {
   setSelectedImage({ url: imageUrl, index });
@@ -262,7 +262,9 @@ useEffect(() => {
   };
 
   updateBookMark();
-}, [bookmarked, userId, blog_id, loaded]);
+}, [bookmarked]);
+
+
 
   const difficultyLevel = difficulty;
 

@@ -23,7 +23,8 @@ function App() {
           <Route path="" element={<Navigate to="/login"/>}/>
           <Route path='/login' element={<Login/>}></Route>
           <Route path='/signup' element={<Signup/>}></Route>
-          <Route path="/home" element={<Home/>}></Route>
+          <Route path="/home" element={<Home />} />
+          <Route path="/home/search" element={<Home />} />
           <Route path="/blog/:blog_id/:blog_title" element={<IndividualBlogDisplayer />} />
           <Route path="/draft/:blog_id/" element={<IndividualDraftDisplayer/>}/>
           <Route path="/profile" element={<Profile />} />

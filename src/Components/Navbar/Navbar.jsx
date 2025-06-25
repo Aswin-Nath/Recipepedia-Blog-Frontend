@@ -2,12 +2,10 @@ import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useState } from "react";
 import { useUser } from "../Contexts/ContextProvider";
-
 const Navbar = () => {
     const {userId,logout,setUserId} = useUser();
     const navigate = useNavigate();
     const [show,setshow] = useState(0);
-    
     const toggle = () => {
         if(show === 0){
             setTimeout(() => {
@@ -23,6 +21,8 @@ const Navbar = () => {
             <div className="container">
                 <div className="content-displayer">
                     <h1 className="brand">Recipepedia</h1>
+                      
+
                     <h1 className="nav-link" onClick={() => {navigate("/home",{state:{userId}})}}>Home</h1>
                     <h1 className="nav-link" onClick={() => {navigate("/network")}}>Network</h1>
                 </div>

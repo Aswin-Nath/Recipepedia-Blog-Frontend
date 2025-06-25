@@ -4,98 +4,83 @@ import Navbar from "../Navbar/Navbar";
 import './Profile.css';
 import { useUser } from '../Contexts/ContextProvider';
 import axios from 'axios';
-import IndividualHomeDisplayer from '../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer';
+import IndividualHomeBlogDisplayer from '../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer';
+import IndividualHomeDraftDisplayer from "../IndividualHomeDraftDisplayer/IndividualHomeDraftDisplayer";
+import IndividualHomeScheduledBlogDisplayer from "../IndividualHomeScheduledBlogDisplayer/IndividualhomeScheduledBlogDisplayer";
 
 const Profile = () => {
-    const { userId, loading } = useUser();
-    const [blogs, setblogs] = useState([]);
-    const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('blogs');
+  const { userId, loading } = useUser();
+  const navigate = useNavigate();
 
-    const handleBookmarks = () => {
-        navigate('/profile/bookmarks');
-    };
-    const handleDrafts=()=>{
-        navigate("/profile/drafts");
-    }
-    const handleSchedule=()=>{
-        navigate("/profile/schedule");
-    }
-    const handleCreatePost = () => {
-        navigate('/new-blog');
+  const [activeTab, setActiveTab] = useState('blogs');
+  const [blogs, setBlogs] = useState([]);
+  const [drafts, setDrafts] = useState([]);
+  const [scheduled, setScheduled] = useState([]);
+  const [bookmarks, setBookmarks] = useState([]);
+
+  useEffect(() => {
+    if (loading || !userId) return;
+
+    const fetchBlogs = async () => {
+      const res = await axios.get("http://127.0.0.1:5000/api/users/blogs", { params: { userId } });
+      setBlogs(res.data.blogs || []);
     };
 
-    const handleViewAllBlogs = () => {
-        navigate('/profile/my-blogs');  
+    const fetchDrafts = async () => {
+      const res = await axios.get("http://127.0.0.1:5000/api/users/drafts", { params: { userId } });
+      setDrafts(res.data.drafts || []);
     };
-    
-    useEffect(() => {
-        if (loading) {
-            return;
-        }
-        if (!userId) {
-            navigate("/login");
-            return;
-        }
-        const fetchBlogs = async () => {
-            const API = "http://127.0.0.1:5000/api/users/blogs";
-            try {
-                const response = await axios.get(API, { params: { userId } });
-                setblogs(response.data.blogs);
-            }
-            catch (error) {
-                console.log("Error occured", error);
-            }
-        }
-        fetchBlogs();
-    }, [userId, loading,navigate])
 
-return (
+    const fetchScheduled = async () => {
+      const res = await axios.get("http://127.0.0.1:5000/api/get/scheduled_blogs", { params: { userId } });
+      setScheduled(res.data.schedule_blogs || []);
+    };
+
+    const fetchBookmarks = async () => {
+      const res = await axios.get("http://127.0.0.1:5000/api/bookmarks", { params: { userId } });
+      setBookmarks(res.data.bookmarks || []);
+    };
+
+    fetchBlogs();
+    fetchDrafts();
+    fetchScheduled();
+    fetchBookmarks();
+  }, [loading, userId]);
+  return (
     <div className="profile-container">
-        <Navbar />
-        <div className="profile-content">
-            <div className="action-buttons">
-                <button className="bookmark-btn" onClick={handleBookmarks}>Bookmarks</button>
-                <button className="create-post-btn" onClick={handleCreatePost}>Create a Post</button>
-                <button className='bookmark-btn' onClick={handleDrafts}>Drafted Posts</button>
-                <button className='bookmark-btn' onClick={handleSchedule}>Scheduled Posts</button>
-            </div>
+      <Navbar />
+      <div className="profile-content">
+        <div className="activity-section">
+          <h2>Activity</h2>
 
-            <div className="activity-section">
-                <h2>Activity</h2>
-                <div className="activity-tabs">
-                    <button 
-                        className={`tab ${activeTab === 'blogs' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('blogs')}
-                    >
-                        Blogs
-                    </button>
+          {/* Tab Buttons */}
+          <div className="activity-tabs">
+            <button className={`tab ${activeTab === 'blogs' ? 'active' : ''}`} onClick={() => setActiveTab('blogs')}>Blogs</button>
+            <button className={`tab ${activeTab === 'drafts' ? 'active' : ''}`} onClick={() => setActiveTab('drafts')}>Drafts</button>
+            <button className={`tab ${activeTab === 'scheduled' ? 'active' : ''}`} onClick={() => setActiveTab('scheduled')}>Scheduled</button>
+            <button className={`tab ${activeTab === 'bookmarks' ? 'active' : ''}`} onClick={() => setActiveTab('bookmarks')}>Bookmarks</button>
+            <button className="create-post-btn" onClick={()=>{navigate("/new-blog")}}>Create a Post</button>
+          </div>
 
-                </div>
-
-                {activeTab === "blogs" && (
-                    <>
-                        <div className="posts-grid">
-                            {blogs.slice(0, 2).map((blog) => (
-                                <IndividualHomeDisplayer 
-                                    key={blog.blog_id} 
-                                    blog={blog} 
-                                />
-                            ))}
-                        </div>
-                        {blogs.length > 2 && (
-                            <div className="view-all-button">
-                                <button onClick={handleViewAllBlogs}>
-                                    View All My Blogs
-                                </button>
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
+          {/* Tab Contents */}
+          <div className="posts-grid">
+            {activeTab === 'blogs' && blogs.map(blog => (
+              <IndividualHomeBlogDisplayer key={blog.blog_id} blog={blog} />
+            ))}
+            {activeTab === 'drafts' && drafts.map(draft => (
+              <IndividualHomeDraftDisplayer key={draft.blog_id} blog={draft} />
+            ))}
+            {activeTab === 'scheduled' && scheduled.map(sch => (
+              <IndividualHomeScheduledBlogDisplayer key={sch.blog_id} blog={sch} />
+            ))}
+            {activeTab === 'bookmarks' && bookmarks.map(bookmark => (
+              <IndividualHomeBlogDisplayer key={bookmark.blog_id} blog={bookmark} />
+            ))}
+          </div>
         </div>
+      </div>
     </div>
-);
+  );
 };
 
 export default Profile;
