@@ -64,7 +64,7 @@ const EditBlog = () => {
       useEffect(()=>{
     const fetchImages= async ()=>{
       try{
-        const API=`http://127.0.0.1:5000/api/get/blogs/images/${blog_id}`;
+        const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/images/${blog_id}`;
         const response=await axios.get(API);
         const urls=response.data.image_urls;
         console.log("IMAGE URLS",urls);
@@ -80,7 +80,7 @@ const EditBlog = () => {
   useEffect(()=>{
     const fetchVideos=async ()=>{
       try{
-        const API=`http://127.0.0.1:5000/api/get/blogs/videos/${blog_id}`;
+        const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/videos/${blog_id}`;
         // console.log("VIDEO",blog_id);
         const response=await axios.get(API);
 
@@ -100,11 +100,11 @@ const EditBlog = () => {
     useEffect(()=>{
         const fetchBlogData=async ()=>{
             try{
-                const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
+                const API=`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
                 const response=await axios.get(API);
                 setBlog(response.data.blog[0]);
                 if(response.data.blog[0].status=="Hold"){
-                    const time_date_response=await axios.get("http://127.0.0.1:5000/api/get/scheduled_time",{params:{blog_id}});
+                    const time_date_response=await axios.get("https://recipepedia-blog-backend.onrender.com/api/get/scheduled_time",{params:{blog_id}});
                     setdate(time_date_response.data.date);
                     settime(time_date_response.data.time);
                     console.log(time_date_response.data.date,time_date_response.data.time);

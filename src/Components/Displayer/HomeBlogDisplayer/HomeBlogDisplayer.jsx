@@ -16,7 +16,7 @@ const HomeBlog = () => {
   const [searchContent, setContent] = useState(defaultSearch);
 
   const fetchBlogs = async () => {
-    const API = `http://127.0.0.1:5000/api/get/blogs${
+    const API = `https://recipepedia-blog-backend.onrender.com/api/get/blogs${
       searchContent.trim() ? `?search=${encodeURIComponent(searchContent)}` : ""
     }`;
 

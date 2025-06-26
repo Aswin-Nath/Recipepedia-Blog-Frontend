@@ -18,7 +18,7 @@ const Bookmarks = () => {
         }
         const fetchBookmarks=async ()=>{
             try{
-                const response=await axios.get("http://127.0.0.1:5000/api/bookmarks",{params:{userId}});
+                const response=await axios.get("https://recipepedia-blog-backend.onrender.com/api/bookmarks",{params:{userId}});
                 setbookmarks(response.data.bookmarks);
             }
             catch(error){

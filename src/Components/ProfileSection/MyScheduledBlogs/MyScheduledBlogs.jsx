@@ -17,7 +17,7 @@ const MyScheduledBlogs=()=>{
             return;
         }
         const fetchBlogs=async ()=>{
-            const API="http://127.0.0.1:5000/api/get/scheduled_blogs";
+            const API="https://recipepedia-blog-backend.onrender.com/api/get/scheduled_blogs";
             try{
                 const response=await axios.get(API,{params:{userId}});
                 setblogs(response.data.schedule_blogs);

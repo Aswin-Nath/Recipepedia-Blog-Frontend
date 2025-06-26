@@ -26,7 +26,7 @@ const Signup = () => {
             alert("Password length should be atleast 8");
             return ;
         }
-        const API="http://127.0.0.1:5000/api/users/check";
+        const API="https://recipepedia-blog-backend.onrender.com/api/users/check";
         try{
             const response=await axios.get(API,{params:{Username,Email}});
                 const mail_check=response.data.mail;
@@ -39,7 +39,7 @@ const Signup = () => {
                     alert("Email is already registered try with an alternate email");
                     return ;
                 }
-                const ADD_API="http://127.0.0.1:5000/api/signup";
+                const ADD_API="https://recipepedia-blog-backend.onrender.com/api/signup";
                 const data1={
                         "username":Username,
                         "email":Email,

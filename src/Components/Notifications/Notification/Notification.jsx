@@ -13,8 +13,8 @@ const Notification = () => {
     setLoading(true);
     try {
       const [blogRes, commentRes] = await Promise.all([
-        axios.get("http://127.0.0.1:5000/api/notifications/blog", { params: { userId } }),
-        axios.get("http://127.0.0.1:5000/api/notifications/comment", { params: { userId } }),
+        axios.get("https://recipepedia-blog-backend.onrender.com/api/notifications/blog", { params: { userId } }),
+        axios.get("https://recipepedia-blog-backend.onrender.com/api/notifications/comment", { params: { userId } }),
       ]);
       // Add a type field to each notification for identification
       const blogs = (blogRes.data.notifications || []).map(n => ({ ...n, type: "blog" }));
@@ -39,9 +39,9 @@ const Notification = () => {
   const markAsRead = async (notification) => {
     try {
       if (notification.type === "blog") {
-        await axios.put("http://127.0.0.1:5000/api/notifications/blog/read", { notificationId: notification.notification_id });
+        await axios.put("https://recipepedia-blog-backend.onrender.com/api/notifications/blog/read", { notificationId: notification.notification_id });
       } else {
-        await axios.put("http://127.0.0.1:5000/api/notifications/comment/read", { notificationId: notification.notification_id });
+        await axios.put("https://recipepedia-blog-backend.onrender.com/api/notifications/comment/read", { notificationId: notification.notification_id });
       }
       setNotifications((prev) =>
         prev.map((n) =>

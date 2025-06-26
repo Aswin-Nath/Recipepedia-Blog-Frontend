@@ -23,22 +23,22 @@ const Profile = () => {
     if (loading || !userId) return;
 
     const fetchBlogs = async () => {
-      const res = await axios.get("http://127.0.0.1:5000/api/users/blogs", { params: { userId } });
+      const res = await axios.get("https://recipepedia-blog-backend.onrender.com/api/users/blogs", { params: { userId } });
       setBlogs(res.data.blogs || []);
     };
 
     const fetchDrafts = async () => {
-      const res = await axios.get("http://127.0.0.1:5000/api/users/drafts", { params: { userId } });
+      const res = await axios.get("https://recipepedia-blog-backend.onrender.com/api/users/drafts", { params: { userId } });
       setDrafts(res.data.drafts || []);
     };
 
     const fetchScheduled = async () => {
-      const res = await axios.get("http://127.0.0.1:5000/api/get/scheduled_blogs", { params: { userId } });
+      const res = await axios.get("https://recipepedia-blog-backend.onrender.com/api/get/scheduled_blogs", { params: { userId } });
       setScheduled(res.data.schedule_blogs || []);
     };
 
     const fetchBookmarks = async () => {
-      const res = await axios.get("http://127.0.0.1:5000/api/bookmarks", { params: { userId } });
+      const res = await axios.get("https://recipepedia-blog-backend.onrender.com/api/bookmarks", { params: { userId } });
       setBookmarks(res.data.bookmarks || []);
     };
 

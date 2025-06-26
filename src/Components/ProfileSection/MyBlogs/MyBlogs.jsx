@@ -20,7 +20,7 @@ const MyBlogs = () => {
             return;
         }
         const fetchBlogs = async () => {
-            const API = "http://127.0.0.1:5000/api/users/blogs";
+            const API = "https://recipepedia-blog-backend.onrender.com/api/users/blogs";
             try {
                 const response = await axios.get(API, { params: { userId } });
                 setblogs(response.data.blogs);

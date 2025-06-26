@@ -27,7 +27,7 @@ const Comments = ({ blog_id, user_id }) => {
 
   const handleDelete = async (comment_id) => {
     // Add your delete logic here
-    const API=`http://127.0.0.1:5000/api/delete/comments/${comment_id}`;
+    const API=`https://recipepedia-blog-backend.onrender.com/api/delete/comments/${comment_id}`;
     console.log(comment_id,"COMMENT_ID");
     try{
       await axios.delete(API);
@@ -211,7 +211,7 @@ const Comments = ({ blog_id, user_id }) => {
     if (!current_addcomment) {
       return alert("comment should contain at least 3 characters");
     }
-    const API = "http://127.0.0.1:5000/api/add/comment";
+    const API = "https://recipepedia-blog-backend.onrender.com/api/add/comment";
     try {
       const result = await axios.post(
         API,
@@ -238,7 +238,7 @@ const Comments = ({ blog_id, user_id }) => {
   };
 
   const fetchComments = async () => {
-      const API = `http://127.0.0.1:5000/api/get/${blog_id}/comment`;
+      const API = `https://recipepedia-blog-backend.onrender.com/api/get/${blog_id}/comment`;
       try {
         const response = await axios.get(API, { params: { blog_id } });
         const commentsData = response.data.message;
@@ -273,7 +273,7 @@ const Comments = ({ blog_id, user_id }) => {
     
   useEffect(() => {
     const fetchComments = async () => {
-      const API = `http://127.0.0.1:5000/api/get/${blog_id}/comment`;
+      const API = `https://recipepedia-blog-backend.onrender.com/api/get/${blog_id}/comment`;
       try {
         const response = await axios.get(API, { params: { blog_id } });
         const commentsData = response.data.message;
@@ -358,7 +358,7 @@ const Comments = ({ blog_id, user_id }) => {
                     return alert("Provide the reason to report");
                   }
                   const API =
-                    "http://127.0.0.1:5000/api/post/report-comments";
+                    "https://recipepedia-blog-backend.onrender.com/api/post/report-comments";
                   const data = {
                     userId,
                     blog_id,

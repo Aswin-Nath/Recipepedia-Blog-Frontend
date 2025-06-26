@@ -48,7 +48,7 @@ const IndividualBlogDisplayer = () => {
   };
   useEffect(()=>{
     const fetchBlog=async ()=>{
-      const API=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
+      const API=`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
       const response=await axios.get(API);
       setblog(response.data.blog[0]);
       console.log("BLOG",response.data.blog);
@@ -62,7 +62,7 @@ const IndividualBlogDisplayer = () => {
     if(loading){
       return;
     }
-    const API="http://127.0.0.1:5000/api/get/blogs/likes";
+    const API="https://recipepedia-blog-backend.onrender.com/api/get/blogs/likes";
     const fetchLikeStatus=async ()=>{
       try{
         console.log("DATA", { userId, blog_id: parseInt(blog_id) });
@@ -98,9 +98,9 @@ const handleLikeClick = async () => {
   try {
     if (initially_liked) {
       // If initially liked, toggle like off or on
-      await axios.put("http://127.0.0.1:5000/api/edit/blogs/likes/", data);
+      await axios.put("https://recipepedia-blog-backend.onrender.com/api/edit/blogs/likes/", data);
     } else {
-      await axios.post("http://127.0.0.1:5000/api/add/blogs/likes/", data);
+      await axios.post("https://recipepedia-blog-backend.onrender.com/api/add/blogs/likes/", data);
       setInitial_liked(true); // lock in that it's created now
     }
   } catch (error) {
@@ -169,7 +169,7 @@ const handleNextImage = () => {
 
     setIsDeleting(true);
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/blogs/${blog_id}`);
+      await axios.delete(`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`);
       navigate('/');
     } catch (error) {
       console.error("Error deleting blog:", error);
@@ -185,7 +185,7 @@ const handleNextImage = () => {
       const data={
         userId,blog_id
       }
-      const API="http://127.0.0.1:5000/api/bookmark-checker";
+      const API="https://recipepedia-blog-backend.onrender.com/api/bookmark-checker";
       try{
         const response=await axios.get(API,{params:data})
         setloaded(true);
@@ -203,7 +203,7 @@ const handleNextImage = () => {
   useEffect(()=>{
     const fetchImages= async ()=>{
       try{
-        const API=`http://127.0.0.1:5000/api/get/blogs/images/${blog_id}`;
+        const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/images/${blog_id}`;
         const response=await axios.get(API);
         const urls=response.data.image_urls;
         console.log("IMAGE URLS",urls);
@@ -223,7 +223,7 @@ const handleNextImage = () => {
   useEffect(()=>{
     const fetchVideos=async ()=>{
       try{
-        const API=`http://127.0.0.1:5000/api/get/blogs/videos/${blog_id}`;
+        const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/videos/${blog_id}`;
         // console.log("VIDEO",blog_id);
         const response=await axios.get(API);
 
@@ -251,7 +251,7 @@ useEffect(() => {
       blog_id: blog_id,
       condition: bookmarked
     };
-    const API = "http://127.0.0.1:5000/api/add/bookmark";
+    const API = "https://recipepedia-blog-backend.onrender.com/api/add/bookmark";
     try {
       await axios.post(API, data, {
         headers: { "Content-Type": "application/json" }
@@ -347,7 +347,7 @@ useEffect(() => {
                     <div className="modal-actions">
                       <button 
                         onClick={async () => {
-                          const API="http://127.0.0.1:5000/api/post/report-posts";
+                          const API="https://recipepedia-blog-backend.onrender.com/api/post/report-posts";
                           const data={
                             userId,blog_id,reportReason,
                           }

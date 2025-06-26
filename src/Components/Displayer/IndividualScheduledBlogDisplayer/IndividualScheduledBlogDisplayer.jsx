@@ -48,7 +48,7 @@ const IndividualScheduleBlogDisplayer= () => {
 
   useEffect(()=>{
     const fetchBlog = async () => {
-        const API = `http://127.0.0.1:5000/api/get/scheduled_blog`;
+        const API = `https://recipepedia-blog-backend.onrender.com/api/get/scheduled_blog`;
         const response = await axios.get(API, { params: { blog_id } });
         console.log(response,blog_id);
         const blogData = response.data?.scheduled_blog // corrected key
@@ -125,7 +125,7 @@ const handleNextImage = () => {
 
     setIsDeleting(true);
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/blogs/${blog_id}`);
+      await axios.delete(`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`);
       navigate('/');
     } catch (error) {
       console.error("Error deleting blog:", error);
@@ -140,7 +140,7 @@ const handleNextImage = () => {
   useEffect(()=>{
     const fetchImages= async ()=>{
       try{
-        const API=`http://127.0.0.1:5000/api/get/blogs/images/${blog_id}`;
+        const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/images/${blog_id}`;
         const response=await axios.get(API);
         const urls=response.data.image_urls;
         console.log("IMAGE URLS",urls);
@@ -157,7 +157,7 @@ const handleNextImage = () => {
   useEffect(()=>{
     const fetchVideos=async ()=>{
       try{
-        const API=`http://127.0.0.1:5000/api/get/blogs/videos/${blog_id}`;
+        const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/videos/${blog_id}`;
         // console.log("VIDEO",blog_id);
         const response=await axios.get(API);
 

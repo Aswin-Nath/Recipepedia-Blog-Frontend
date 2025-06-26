@@ -16,7 +16,7 @@ const MyDrafts=()=>{
         };
         const fetchDrafts=async ()=>{
             try{
-                const API="http://127.0.0.1:5000/api/users/drafts";
+                const API="https://recipepedia-blog-backend.onrender.com/api/users/drafts";
                 const response=await axios.get(API,{params:{userId}});
                 setDrafts(response.data.drafts);
                 console.log(response);
