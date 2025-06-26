@@ -4,7 +4,8 @@ import Navbar from "../../Navbars/Navbar/Navbar";
 import './Profile.css'; 
 import { useUser } from '../../Contexts/ContextProvider';
 import axios from 'axios';
-import IndividualHomeBlogDisplayer from '../../OutsideDisplayer/IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer';
+
+import IndividualHomeBlogDisplayer from "../../OutsideDisplayer/IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer"
 import IndividualHomeDraftDisplayer from "../../OutsideDisplayer/IndividualHomeDraftDisplayer/IndividualHomeDraftDisplayer";
 import IndividualHomeScheduledBlogDisplayer from "../../OutsideDisplayer/IndividualHomeScheduledBlogDisplayer/IndividualHomeScheduledBlogDisplayer";
 import EditProfile from '../EditDetails/EditDetails';

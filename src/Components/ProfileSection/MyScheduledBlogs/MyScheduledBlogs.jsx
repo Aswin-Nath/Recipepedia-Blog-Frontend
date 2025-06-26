@@ -6,7 +6,7 @@ import axios from "axios";
 import { useUser } from "../../Contexts/ContextProvider";
 import { useEffect, useState } from "react";
 // import IndividualHomeScheduledBlogDisplayer from "../IndividualHomeScheduledBlogDisplayer/IndividualScheduledBlogDisplayer";
-import IndividualHomeScheduledBlogDisplayer from "../../OutsideDisplayer/IndividualHomeScheduledBlogDisplayer/IndividualhomeScheduledBlogDisplayer";
+import IndividualHomeScheduledBlogDisplayer from "../../OutsideDisplayer/IndividualHomeScheduledBlogDisplayer/IndividualHomeScheduledBlogDisplayer";
 // import IndividualHomeDisplayer from "../IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer";
 const MyScheduledBlogs=()=>{
     const {loading,userId}=useUser();
