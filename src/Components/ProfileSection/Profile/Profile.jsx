@@ -60,7 +60,6 @@ const Profile = () => {
             <button className={`tab ${activeTab === 'scheduled' ? 'active' : ''}`} onClick={() => setActiveTab('scheduled')}>Scheduled</button>
             <button className={`tab ${activeTab === 'bookmarks' ? 'active' : ''}`} onClick={() => setActiveTab('bookmarks')}>Bookmarks</button>
             <button className={`tab ${activeTab === 'edit' ? 'active' : ''}`} onClick={()=>setActiveTab("edit")}>Edit Details</button>
-            <button className="create-post-btn" onClick={()=>{navigate("/new-blog")}}>Create a Post</button>
           </div>
 
           {/* Tab Contents */}

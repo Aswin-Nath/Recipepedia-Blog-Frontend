@@ -1,0 +1,80 @@
+body {
+  background: #f7fafd;
+}
+
+.network-root {
+  min-height: 100vh;
+  background: linear-gradient(120deg, #f7fafd 0%, #e3f6fc 100%);
+  padding-bottom: 40px;
+}
+
+.network-container {
+  max-width: 900px;
+  margin: 40px auto 0 auto;
+  padding: 0;
+}
+
+.network-paper {
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(60, 72, 88, 0.10);
+  background: #fff;
+  padding: 0 0 20px 0;
+}
+
+.network-tabs {
+  border-radius: 22px 22px 0 0;
+  background: #f5faff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.network-list {
+  padding: 0 24px 0 24px;
+}
+
+.network-list .MuiListItem-root {
+  border-bottom: 1px solid #f0f4f8;
+  transition: background 0.15s;
+}
+
+.network-list .MuiListItem-root:last-child {
+  border-bottom: none;
+}
+
+.network-list .MuiListItem-root:hover {
+  background: #f5faff;
+}
+
+.network-list .MuiAvatar-root {
+  border: 2px solid #b8e0fc;
+  box-shadow: 0 2px 8px rgba(60, 72, 88, 0.08);
+}
+
+.network-list .MuiListItemText-root span {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1.08rem;
+}
+
+.network-list .MuiButton-root {
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 1000px) {
+  .network-container {
+    max-width: 98vw;
+    margin: 24px 1vw 0 1vw;
+  }
+  .network-paper {
+    border-radius: 14px;
+  }
+  .network-tabs {
+    border-radius: 14px 14px 0 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .network-list {
+    padding: 0 4px 0 4px;
+  }
+}

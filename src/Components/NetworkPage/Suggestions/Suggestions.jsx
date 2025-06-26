@@ -15,16 +15,16 @@ import {
   CircularProgress,
   Box
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Suggestions = () => {
   const { userId } = useUser();
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate=useNavigate();
   const fetchSuggestions = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/suggestions/${userId}`);
-      console.log(res.data[0]);
       setSuggestions(res.data);
     } catch (err) {
       console.error("Failed to fetch suggestions", err);
@@ -69,10 +69,14 @@ const Suggestions = () => {
                   Follow
                 </Button>
               }>
-                <ListItemAvatar>
-                  <Avatar src={user.profile_url} />
+                <ListItemAvatar style={{cursor:"pointer"}} onClick={()=>{navigate(`/user/${user.user_id}-${user.user_name}`)}}>
+                  <Avatar
+                    src={user.profile_url}
+                    alt={user.user_name}
+                  />
+                   
                 </ListItemAvatar>
-                <ListItemText primary={user.user_name} />
+                <ListItemText style={{cursor:"pointer"}} onClick={()=>{navigate(`/user/${user.user_id}-${user.user_name}`)}} primary={user.user_name} />
               </ListItem>
             ))}
           </List>

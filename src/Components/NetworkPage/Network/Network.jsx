@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../../Navbars/Navbar/Navbar";
 import { useUser } from "../../Contexts/ContextProvider";
-
+import { useNavigate } from "react-router-dom";
+import "./Network.css";
 import {
   Avatar,
   Box,
@@ -20,6 +21,7 @@ import {
 import Suggestions from "../Suggestions/Suggestions";
 
 const Network = () => {
+  const navigate=useNavigate();
   const { userId } = useUser();
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
@@ -70,62 +72,64 @@ const Network = () => {
 
   const currentList = tab === 0 ? followers : following;
 
-  return (
-    <div>
-      <Navbar />
-      <Container maxWidth="sm" sx={{ mt: 4 }}>
-        <Paper elevation={3}>
-          <Tabs
-            value={tab}
-            onChange={(_, newValue) => setTab(newValue)}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-          >
-            <Tab label="Followers" />
-            <Tab label="Following" />
-          </Tabs>
+// ...existing code...
+return (
+  <div className="network-root">
+    <Navbar />
+    <Container maxWidth="lg" className="network-container">
+      <Paper elevation={3} className="network-paper">
+        <Tabs
+          value={tab}
+          onChange={(_, newValue) => setTab(newValue)}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+          className="network-tabs"
+        >
+          <Tab label="Followers" />
+          <Tab label="Following" />
+        </Tabs>
 
-          {currentList.length === 0 ? (
-            <Typography sx={{ p: 3, textAlign: "center", color: "gray" }}>
-              No {tab === 0 ? "followers" : "following"} found.
-            </Typography>
-          ) : (
-            <List>
-              {currentList.map((user) => (
-                <ListItem
-                  key={user.user_id}
-                  secondaryAction={
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      size="small"
-                      onClick={() =>
-                        tab === 0
-                          ? handleRemoveFollower(user.user_id)
-                          : handleUnfollow(user.user_id)
-                      }
-                    >
-                      {tab==1?"Unfollow":"Remove"}
-                    </Button>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar
-                      src={user.profile_url}
-                      alt={user.user_name}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText primary={user.user_name} />
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </Paper>  
-      </Container>
-      <Suggestions />
-    </div>
-  );
+        {currentList.length === 0 ? (
+          <Typography sx={{ p: 3, textAlign: "center", color: "gray" }}>
+            No {tab === 0 ? "followers" : "following"} found.
+          </Typography>
+        ) : (
+          <List className="network-list">
+            {currentList.map((user) => (
+              <ListItem
+                key={user.user_id}
+                secondaryAction={
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    onClick={() =>
+                      tab === 0
+                        ? handleRemoveFollower(user.user_id)
+                        : handleUnfollow(user.user_id)
+                    }
+                  >
+                    {tab == 1 ? "Unfollow" : "Remove"}
+                  </Button>
+                }
+              >
+                <ListItemAvatar style={{ cursor: "pointer" }} onClick={() => { navigate(`/user/${user.user_id}-${user.user_name}`) }}>
+                  <Avatar
+                    src={user.profile_url}
+                    alt={user.user_name}
+                  />
+                </ListItemAvatar>
+                <ListItemText style={{ cursor: "pointer" }} onClick={() => { navigate(`/user/${user.user_id}-${user.user_name}`) }} primary={user.user_name} />
+              </ListItem>
+            ))}
+          </List>
+        )}
+      </Paper>
+    </Container>
+    <Suggestions />
+  </div>
+);
 };
 
 export default Network;

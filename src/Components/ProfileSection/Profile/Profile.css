@@ -1,12 +1,10 @@
 .profile-container {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   background-color: #f5f5f5;
 }
 
 .profile-content {
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 20px 20px;
 }
 
 .action-buttons {
@@ -33,19 +31,6 @@
   background-color: #e0e0e0;
 }
 
-.create-post-btn {
-  margin-left: auto;
-  padding: 12px 24px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: a ll 0.2s ease;
-}
-
-.create-post-btn:hover {
-  background-color: #0081ff;
-}
 
 
 
@@ -55,7 +40,6 @@
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: 700px;
 }
 
 .activity-section h2 {

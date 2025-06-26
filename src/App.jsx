@@ -8,7 +8,6 @@ import IndividualBlogDisplayer from './Components/Displayer/IndividualBlogDispla
 import Profile from './Components/ProfileSection/Profile/Profile';
 import Bookmarks from './Components/Bookmarks/Bookmarks';
 import CreateBlog from './Components/Creater/CreateBlog/CreateBlog';
-// import MyBlogs from './Components/ProfileSection/Profile/MyBlogs/MyBlogs';
 import MyBlogs from './Components/ProfileSection/MyBlogs/MyBlogs';
 import EditBlog from './Components/Editor/EditBlog/EditBlog';
 import AdminHomePage from './Components/HomePages/NormalAdmin/Admin';
@@ -18,6 +17,7 @@ import IndividualDraftDisplayer from './Components/Displayer/IndividualDraftDisp
 import MyScheduledBlogs from './Components//ProfileSection/MyScheduledBlogs/MyScheduledBlogs';
 import IndividualScheduleBlogDisplayer from './Components/Displayer/IndividualScheduledBlogDisplayer/IndividualScheduledBlogDisplayer';
 import Network from './Components/NetworkPage/Network/Network';
+import ViewUsers from './Components/ViewUsers/ViewUsers/ViewUsers';
 function App() {
   return (
     <div className="App">
@@ -41,6 +41,7 @@ function App() {
           <Route path="/scheduled/:blog_id" element={<IndividualScheduleBlogDisplayer/>}/>
           <Route path="/network" element={<Network/>}/>
           <Route path='/edit-details' element={<EditDetails/>}></Route>
+          <Route path='/user/:user_slug' element={<ViewUsers/>}/>
         </Routes>
     </div>
   );
