@@ -21,6 +21,7 @@
     "react-router-dom": "^7.6.1",
     "react-scripts": "5.0.1",
     "recipe-pedia": "file:",
+    "socket.io-client": "^4.8.1",
     "vite": "^6.3.5",
     "web-vitals": "^2.1.4"
   },

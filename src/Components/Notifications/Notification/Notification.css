@@ -1,0 +1,39 @@
+.notification-item {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  margin-bottom: 12px;
+  padding: 14px 20px;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s, border-left 0.2s;
+}
+
+.notification-item.unread {
+  background: #e0f7fa;
+  border-left: 4px solid #00796b;
+}
+
+.notification-item.read {
+  background: #f3f3f3;
+  border-left: 4px solid #bbb;
+}
+
+.notification-item:hover {
+  background: #b2ebf2;
+}
+
+.notification-item .new-badge {
+  color: #fff;
+  background: #00796b;
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 0.75em;
+  margin-left: 8px;
+}
+
+@media (max-width: 600px) {
+  .notification-item {
+    padding: 10px 8px;
+    font-size: 0.97em;
+  }
+}
