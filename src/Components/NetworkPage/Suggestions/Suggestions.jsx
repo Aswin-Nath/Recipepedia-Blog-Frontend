@@ -24,6 +24,7 @@ const Suggestions = () => {
   const fetchSuggestions = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/suggestions/${userId}`);
+      console.log(res.data[0]);
       setSuggestions(res.data);
     } catch (err) {
       console.error("Failed to fetch suggestions", err);
@@ -69,7 +70,7 @@ const Suggestions = () => {
                 </Button>
               }>
                 <ListItemAvatar>
-                  <Avatar src={user.avatar} />
+                  <Avatar src={user.profile_url} />
                 </ListItemAvatar>
                 <ListItemText primary={user.user_name} />
               </ListItem>

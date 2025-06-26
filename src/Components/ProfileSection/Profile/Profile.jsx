@@ -7,7 +7,7 @@ import axios from 'axios';
 import IndividualHomeBlogDisplayer from '../../OutsideDisplayer/IndividualHomeBlogDisplayer/IndividualHomeBlogDisplayer';
 import IndividualHomeDraftDisplayer from "../../OutsideDisplayer/IndividualHomeDraftDisplayer/IndividualHomeDraftDisplayer";
 import IndividualHomeScheduledBlogDisplayer from "../../OutsideDisplayer/IndividualHomeScheduledBlogDisplayer/IndividualhomeScheduledBlogDisplayer";
-
+import EditProfile from '../EditDetails/EditDetails';
 const Profile = () => {
   const { userId, loading } = useUser();
   const navigate = useNavigate();
@@ -59,23 +59,53 @@ const Profile = () => {
             <button className={`tab ${activeTab === 'drafts' ? 'active' : ''}`} onClick={() => setActiveTab('drafts')}>Drafts</button>
             <button className={`tab ${activeTab === 'scheduled' ? 'active' : ''}`} onClick={() => setActiveTab('scheduled')}>Scheduled</button>
             <button className={`tab ${activeTab === 'bookmarks' ? 'active' : ''}`} onClick={() => setActiveTab('bookmarks')}>Bookmarks</button>
+            <button className={`tab ${activeTab === 'edit' ? 'active' : ''}`} onClick={()=>setActiveTab("edit")}>Edit Details</button>
             <button className="create-post-btn" onClick={()=>{navigate("/new-blog")}}>Create a Post</button>
           </div>
 
           {/* Tab Contents */}
           <div className="posts-grid">
-            {activeTab === 'blogs' && blogs.map(blog => (
-              <IndividualHomeBlogDisplayer key={blog.blog_id} blog={blog} />
-            ))}
-            {activeTab === 'drafts' && drafts.map(draft => (
-              <IndividualHomeDraftDisplayer key={draft.blog_id} blog={draft} />
-            ))}
-            {activeTab === 'scheduled' && scheduled.map(sch => (
-              <IndividualHomeScheduledBlogDisplayer key={sch.blog_id} blog={sch} />
-            ))}
-            {activeTab === 'bookmarks' && bookmarks.map(bookmark => (
-              <IndividualHomeBlogDisplayer key={bookmark.blog_id} blog={bookmark} />
-            ))}
+            {activeTab === 'blogs' && (
+              blogs.length > 0 ? (
+                blogs.map(blog => (
+                  <IndividualHomeBlogDisplayer key={blog.blog_id} blog={blog} />
+                ))
+              ) : (
+                <p>No blogs found.</p>
+              )
+            )}
+
+            {activeTab === 'drafts' && (
+              drafts.length > 0 ? (
+                drafts.map(draft => (
+                  <IndividualHomeDraftDisplayer key={draft.blog_id} blog={draft} />
+                ))
+              ) : (
+                <p>No drafts found.</p>
+              )
+            )}
+
+            {activeTab === 'scheduled' && (
+              scheduled.length > 0 ? (
+                scheduled.map(sch => (
+                  <IndividualHomeScheduledBlogDisplayer key={sch.blog_id} blog={sch} />
+                ))
+              ) : (
+                <p>No scheduled blogs found.</p>
+              )
+            )}
+
+            {activeTab === 'bookmarks' && (
+              bookmarks.length > 0 ? (
+                bookmarks.map(bookmark => (
+                  <IndividualHomeBlogDisplayer key={bookmark.blog_id} blog={bookmark} />
+                ))
+              ) : (
+                <p>No bookmarks found.</p>
+              )
+            )}
+
+            {activeTab==="edit" && <EditProfile/>}
           </div>
         </div>
       </div>

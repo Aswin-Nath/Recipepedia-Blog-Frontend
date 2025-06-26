@@ -3,6 +3,7 @@ import { BrowserRouter as Router,Routes,Route, Navigate } from 'react-router-dom
 import Login from './Components/Auth/Login/Login';
 import Signup from './Components/Auth/Signup/Signup';
 import Home from './Components/HomePages/Home/Home';
+import EditDetails from './Components/ProfileSection/EditDetails/EditDetails';
 import IndividualBlogDisplayer from './Components/Displayer/IndividualBlogDisplayer/IndividualBlogDisplayer';
 import Profile from './Components/ProfileSection/Profile/Profile';
 import Bookmarks from './Components/Bookmarks/Bookmarks';
@@ -39,6 +40,7 @@ function App() {
           <Route path="/profile/schedule" element={<MyScheduledBlogs/>}/>
           <Route path="/scheduled/:blog_id" element={<IndividualScheduleBlogDisplayer/>}/>
           <Route path="/network" element={<Network/>}/>
+          <Route path='/edit-details' element={<EditDetails/>}></Route>
         </Routes>
     </div>
   );

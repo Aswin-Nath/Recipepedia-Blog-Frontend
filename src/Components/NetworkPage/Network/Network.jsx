@@ -31,6 +31,8 @@ const Network = () => {
         axios.get(`http://localhost:5000/api/followers/${userId}`),
         axios.get(`http://localhost:5000/api/following/${userId}`),
       ]);
+      console.log(resFollowers.data);
+      console.log(resFollowing.data);
       setFollowers(resFollowers.data);
       setFollowing(resFollowing.data);
     } catch (err) {
@@ -110,7 +112,7 @@ const Network = () => {
                 >
                   <ListItemAvatar>
                     <Avatar
-                      src={user.avatar || "https://via.placeholder.com/150"}
+                      src={user.profile_url}
                       alt={user.user_name}
                     />
                   </ListItemAvatar>
@@ -119,7 +121,7 @@ const Network = () => {
               ))}
             </List>
           )}
-        </Paper>
+        </Paper>  
       </Container>
       <Suggestions />
     </div>
