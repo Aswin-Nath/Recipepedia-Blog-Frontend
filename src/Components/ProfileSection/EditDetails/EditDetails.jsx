@@ -41,7 +41,7 @@ const EditProfile = () => {
 
     const fetchDetails = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/user-details", {
+        const res = await axios.get("https://recipepedia-blog-backend.onrender.com/api/user-details", {
           params: { userId },
           headers: {
             Authorization: `Bearer ${token}`,
@@ -98,7 +98,7 @@ const EditProfile = () => {
       }
 
       await axios.post(
-        "http://localhost:5000/api/update-user-details",
+        "https://recipepedia-blog-backend.onrender.com/api/update-user-details",
         {
           userId,
           user_name: userName,

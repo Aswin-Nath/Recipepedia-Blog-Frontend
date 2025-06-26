@@ -46,7 +46,7 @@ const EditBlog = () => {
             if (scheduledDate && scheduledTime) {
                 try {
                     
-                    await axios.post('http://localhost:5000/api/post/schedule_blog', {
+                    await axios.post('https://recipepedia-blog-backend.onrender.com/api/post/schedule_blog', {
                             blog_id,
                             date: scheduledDate,
                             time: scheduledTime
@@ -300,7 +300,7 @@ const handleSubmit = async (e,athu) => {
     console.log(delete_image_id,imagePreviews);
 
     try {
-        await axios.put(`http://localhost:5000/api/blogs/${blog.blog_id}`, {
+        await axios.put(`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog.blog_id}`, {
             title: formData.title.trim(),
             content: formData.content.trim(),
             difficulty: formData.difficulty,
@@ -311,24 +311,24 @@ const handleSubmit = async (e,athu) => {
 
         let imageUrls = [];
         if(delete_image_id.length>0){
-            const API="http://localhost:5000/api/edit/blogs/images";
+            const API="https://recipepedia-blog-backend.onrender.com/api/edit/blogs/images";
             await axios.put(API,{delete_image_id});
         }
         if (formData.images.length > 0) {
             imageUrls = await uploadImages();
             
             await Promise.all(imageUrls.map(url => 
-                axios.post('http://localhost:5000/api/blogs/images', {
+                axios.post('https://recipepedia-blog-backend.onrender.com/api/blogs/images', {
                     blog_id: blog.blog_id,
                     image_url: url
                 })
             ));
         }
         if(delete_video){
-            await  axios.put("http://localhost:5000/api/edit/blogs/videos",{blog_id});
+            await  axios.put("https://recipepedia-blog-backend.onrender.com/api/edit/blogs/videos",{blog_id});
         }
         if(videoUrl){
-            const API="http://localhost:5000/api/blogs/videos";
+            const API="https://recipepedia-blog-backend.onrender.com/api/blogs/videos";
             await axios.post(API,{blog_id:blog_id,video_url:videoUrl},{headers:{"Content-Type":"application/json"}});
         }
         setSuccessMessage('Recipe updated successfully!');

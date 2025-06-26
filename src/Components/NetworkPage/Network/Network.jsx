@@ -30,8 +30,8 @@ const Network = () => {
   const fetchNetwork = async () => {
     try {
       const [resFollowers, resFollowing] = await Promise.all([
-        axios.get(`http://localhost:5000/api/followers/${userId}`),
-        axios.get(`http://localhost:5000/api/following/${userId}`),
+        axios.get(`https://recipepedia-blog-backend.onrender.com/api/followers/${userId}`),
+        axios.get(`https://recipepedia-blog-backend.onrender.com/api/following/${userId}`),
       ]);
       console.log(resFollowers.data);
       console.log(resFollowing.data);
@@ -48,7 +48,7 @@ const Network = () => {
 
   const handleRemoveFollower = async (followerId) => {
     try {
-      await axios.post("http://localhost:5000/api/remove-follower", {
+      await axios.post("https://recipepedia-blog-backend.onrender.com/api/remove-follower", {
         follower_id: followerId,
         user_id: userId,
       });
@@ -60,7 +60,7 @@ const Network = () => {
 
   const handleUnfollow = async (followingId) => {
     try {
-      await axios.post("http://localhost:5000/api/unfollow", {
+      await axios.post("https://recipepedia-blog-backend.onrender.com/api/unfollow", {
         follower_id: userId,
         following_id: followingId,
       });

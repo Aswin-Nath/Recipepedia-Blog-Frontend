@@ -24,7 +24,7 @@ const Suggestions = () => {
   const navigate=useNavigate();
   const fetchSuggestions = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/suggestions/${userId}`);
+      const res = await axios.get(`https://recipepedia-blog-backend.onrender.com/api/suggestions/${userId}`);
       setSuggestions(res.data);
     } catch (err) {
       console.error("Failed to fetch suggestions", err);
@@ -39,7 +39,7 @@ const Suggestions = () => {
 
   const handleConnect = async (targetId) => {
     try {
-      await axios.post("http://localhost:5000/api/connect", {
+      await axios.post("https://recipepedia-blog-backend.onrender.com/api/connect", {
         follower_id: userId,
         following_id: targetId,
       });
