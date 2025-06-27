@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Notification.css";
 import { useUser } from "../../Contexts/ContextProvider";
+import socket from "../../Sockets/SocketConnect";
 
 const Notification = () => {
   const { userId, loading } = useUser();
@@ -30,6 +31,22 @@ const Notification = () => {
     setLoading(false);
   };
 
+  useEffect(()=>{
+    socket.on("connect",()=>{
+        console.log("connected the socket",socket.id);
+    })
+    socket.on("disconnect",()=>{
+        console.log("disconnected the socket",socket.id);
+    })
+    const ReFetch=()=>fetchNotifications();
+    socket.on("notify",ReFetch);
+
+    return ()=>{
+      socket.off("connected");
+      socket.off("disconnect");
+      socket.off("notify",ReFetch);
+    }
+  },[])
   useEffect(() => {
     if (loading || !userId) return;
     fetchNotifications();
