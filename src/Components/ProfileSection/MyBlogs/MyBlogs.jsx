@@ -35,19 +35,6 @@ const MyBlogs = () => {
     return (
         <div className="my-blogs-container">
             <Navbar />
-            <Box display="flex" flexDirection="column" alignItems="center" p={3}>
-            <Avatar
-              src={profileUrl}
-              alt={user_name}
-              sx={{ width: 110, height: 110, mb: 2, boxShadow: 3 }}
-            />
-            <Typography variant="h5" fontWeight={600} gutterBottom>
-              {user_name}
-            </Typography>
-            <Typography variant="body1" color="text.secondary" gutterBottom>
-              {userMail}
-            </Typography>
-          </Box>
             <div className="my-blogs-content">
                 <h1>Blogs</h1>
                 <div className="posts-grid">
