@@ -9,21 +9,13 @@ const Notification = () => {
   const [notifications, setNotifications] = useState([]);
   const [Loading, setLoading] = useState(true);
 
-  // Fetch notifications from local backend
+  // Fetch all notifications from unified /all API
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const [blogRes, commentRes] = await Promise.all([
-        axios.get("https://recipepedia-blog-backend.onrender.com/api/notifications/blog", { params: { userId } }),
-        axios.get("https://recipepedia-blog-backend.onrender.com/api/notifications/comment", { params: { userId } }),
-      ]);
-      // Add a type field to each notification for identification
-      const blogs = (blogRes.data.notifications || []).map(n => ({ ...n, type: "blog" }));
-      const comments = (commentRes.data.notifications || []).map(n => ({ ...n, type: "comment" }));
-      // Merge and sort by notification_time descending
-      const all = [...blogs, ...comments].sort(
-        (a, b) => new Date(b.notification_time) - new Date(a.notification_time)
-      );
+      const res = await axios.get("https://recipepedia-blog-backend.onrender.com/api/notifications/all", { params: { userId } });
+      const all = (res.data.notifications || []).map(n => ({ ...n, type: n.type }));
+      all.sort((a, b) => new Date(b.notification_time) - new Date(a.notification_time));
       setNotifications(all);
     } catch (err) {
       setNotifications([]);
@@ -31,44 +23,40 @@ const Notification = () => {
     setLoading(false);
   };
 
-  useEffect(()=>{
-    socket.on("connect",()=>{
-        console.log("connected the socket",socket.id);
-    })
-    socket.on("disconnect",()=>{
-        console.log("disconnected the socket",socket.id);
-    })
-    const ReFetch=()=>fetchNotifications();
-    socket.on("notify",ReFetch);
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("connected the socket", socket.id);
+    });
+    socket.on("disconnect", () => {
+      console.log("disconnected the socket", socket.id);
+    });
+    const ReFetch = () => fetchNotifications();
+    socket.on("notify", ReFetch);
 
-    return ()=>{
+    return () => {
       socket.off("connected");
       socket.off("disconnect");
-      socket.off("notify",ReFetch);
-    }
-  },[])
+      socket.off("notify", ReFetch);
+    };
+  }, []);
   useEffect(() => {
     if (loading || !userId) return;
     fetchNotifications();
   }, [userId, loading]);
 
-  // Mark notification as read
+  // Mark notification as read using the /read API (works for all types)
   const markAsRead = async (notification) => {
     try {
-      if (notification.type === "blog") {
-        await axios.put("https://recipepedia-blog-backend.onrender.com/api/notifications/blog/read", { notificationId: notification.notification_id });
-      } else {
-        await axios.put("https://recipepedia-blog-backend.onrender.com/api/notifications/comment/read", { notificationId: notification.notification_id });
-      }
+      await axios.put("https://recipepedia-blog-backend.onrender.com/api/notifications/read", { notificationId: notification.notification_id });
       setNotifications((prev) =>
         prev.map((n) =>
-          n.notification_id === notification.notification_id && n.type === notification.type
+          n.notification_id === notification.notification_id
             ? { ...n, is_read: true }
             : n
         )
       );
     } catch (err) {
-      // handle error if needed
+      alert("Error occured while marking the notifications");
     }
   };
 
@@ -90,21 +78,18 @@ const Notification = () => {
       <div style={{ fontWeight: n.is_read ? 400 : 600 }}>
         {n.type === "blog"
           ? `Blog Notification for Blog #${n.blog_id}`
-          : `Comment Notification on Blog #${n.blog_id}, Comment #${n.comment_id}`}
+          : n.type === "comment"
+          ? `Comment Notification on Blog #${n.blog_id}, Comment #${n.comment_id}`
+          : n.type === "follow"
+          ? `You were followed by User #${n.follower_id}`
+          : "Notification"}
       </div>
       <div style={{ fontSize: "0.85em", color: "#666", marginTop: 4 }}>
         {new Date(n.notification_time).toLocaleString()}
       </div>
       {!n.is_read && (
         <span
-          style={{
-            color: "#fff",
-            background: "#00796b",
-            borderRadius: "10px",
-            padding: "2px 8px",
-            fontSize: "0.75em",
-            marginLeft: 8,
-          }}
+          className="new-badge"
         >
           New
         </span>
