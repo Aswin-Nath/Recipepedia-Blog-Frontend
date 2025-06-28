@@ -21,7 +21,6 @@ const MyScheduledBlogs=()=>{
             try{
                 const response=await axios.get(API,{params:{userId}});
                 setblogs(response.data.schedule_blogs);
-                console.log(response.data.schedule_blogs);
             }
             catch(error){
                 return alert("Error occured while getting the scheduled blogs",error);

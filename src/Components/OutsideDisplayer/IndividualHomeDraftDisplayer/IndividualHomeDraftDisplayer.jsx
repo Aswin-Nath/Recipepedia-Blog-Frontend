@@ -11,7 +11,6 @@ const IndividualHomeDraftDisplayer = ({ blog }) => {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
-    console.log("DRAFT ID",blog_id);
     navigate(`/draft/${blog_id}`);
   };
 

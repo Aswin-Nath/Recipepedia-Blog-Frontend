@@ -51,7 +51,6 @@ const IndividualBlogDisplayer = () => {
       const API=`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
       const response=await axios.get(API);
       setblog(response.data.blog[0]);
-      console.log("BLOG",response.data.blog);
       setReadtime(Math.ceil(response.data.blog[0].content.split(/\s+/).length / averageWPM));
       setload(false);
     }
@@ -65,15 +64,12 @@ const IndividualBlogDisplayer = () => {
     const API="https://recipepedia-blog-backend.onrender.com/api/get/blogs/likes";
     const fetchLikeStatus=async ()=>{
       try{
-        console.log("DATA", { userId, blog_id: parseInt(blog_id) });
         const response=await axios.post(API,{userId,blog_id});
         const status=response.data.status;
-        console.log("STATUS",response.data.status)
         if(status==-1){
           return;
         }
         setInitial_liked(true);
-        console.log("LIKE STATUS",status);
         setlike_status(1);
       }
       catch(error){
@@ -157,7 +153,6 @@ const handleNextImage = () => {
     difficulty
   } = blog;
 
-  // console.log("likes",likes);
 
     const navigate = useNavigate(); 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -189,7 +184,6 @@ const handleNextImage = () => {
       try{
         const response=await axios.get(API,{params:data})
         setloaded(true);
-        console.log("BOOKMARK",response.data);
         setBookmarked(response.data.message);
       }
       catch(error){
@@ -206,7 +200,6 @@ const handleNextImage = () => {
         const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/images/${blog_id}`;
         const response=await axios.get(API);
         const urls=response.data.image_urls;
-        console.log("IMAGE URLS",urls);
         setimage_url(urls);
       }
       catch(error){
@@ -224,7 +217,6 @@ const handleNextImage = () => {
     const fetchVideos=async ()=>{
       try{
         const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/videos/${blog_id}`;
-        // console.log("VIDEO",blog_id);
         const response=await axios.get(API);
 
         const urls=response.data.video_url;
@@ -354,7 +346,6 @@ useEffect(() => {
                           try{
                             await axios.post(API,data,{headers:{'Content-Type':"application/json"}})
                             alert("Reported");
-                            console.log('Report submitted:', reportReason);
                             setShowReportModal(false);
                             setReportReason('');
                           }

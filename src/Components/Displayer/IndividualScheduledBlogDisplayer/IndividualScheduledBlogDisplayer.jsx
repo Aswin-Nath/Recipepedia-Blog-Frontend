@@ -50,16 +50,13 @@ const IndividualScheduleBlogDisplayer= () => {
     const fetchBlog = async () => {
         const API = `https://recipepedia-blog-backend.onrender.com/api/get/scheduled_blog`;
         const response = await axios.get(API, { params: { blog_id } });
-        console.log(response,blog_id);
         const blogData = response.data?.scheduled_blog // corrected key
-        console.log("BLOG",blogData);
         if (!blogData) {
             console.error("No blog data found");
             return;
         }
 
         setBlog(blogData);
-        console.log("BLOGOOMBU", blogData);
 
         setTitle(blogData.title || '');
         setContent(blogData.content || '');
@@ -143,7 +140,6 @@ const handleNextImage = () => {
         const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/images/${blog_id}`;
         const response=await axios.get(API);
         const urls=response.data.image_urls;
-        console.log("IMAGE URLS",urls);
         setimage_url(urls);
       }
       catch(error){
@@ -158,7 +154,6 @@ const handleNextImage = () => {
     const fetchVideos=async ()=>{
       try{
         const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/videos/${blog_id}`;
-        // console.log("VIDEO",blog_id);
         const response=await axios.get(API);
 
         const urls=response.data.video_url;

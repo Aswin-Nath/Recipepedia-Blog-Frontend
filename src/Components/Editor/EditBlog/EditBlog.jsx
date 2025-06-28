@@ -53,7 +53,6 @@ const EditBlog = () => {
                         });
                     setShowScheduleFields(false);
                     settype("Hold");
-                    console.log("HOLD",type);
                 } catch (error) {
                     setError('Failed to schedule blog: ' + (error.response?.data?.message || error.message));
                 }
@@ -67,7 +66,6 @@ const EditBlog = () => {
         const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/images/${blog_id}`;
         const response=await axios.get(API);
         const urls=response.data.image_urls;
-        console.log("IMAGE URLS",urls);
         set_image_urls(urls);
       }
       catch(error){
@@ -81,12 +79,10 @@ const EditBlog = () => {
     const fetchVideos=async ()=>{
       try{
         const API=`https://recipepedia-blog-backend.onrender.com/api/get/blogs/videos/${blog_id}`;
-        // console.log("VIDEO",blog_id);
         const response=await axios.get(API);
 
         const urls=response.data.video_url;
         if(response?.data?.video_url?.[0]?.length>0){
-            console.log(urls[0].length);
             setVideoUrl(urls[0]);   
         }
       }
@@ -107,7 +103,6 @@ const EditBlog = () => {
                     const time_date_response=await axios.get("https://recipepedia-blog-backend.onrender.com/api/get/scheduled_time",{params:{blog_id}});
                     setdate(time_date_response.data.date);
                     settime(time_date_response.data.time);
-                    console.log(time_date_response.data.date,time_date_response.data.time);
                 }
             }
             catch(error){
@@ -235,7 +230,6 @@ const EditBlog = () => {
 
     const removeImage = (index) => {
         if(imagePreviews[index].type==="old"){
-            console.log(imagePreviews[index]);
             setdelete_image(prev=>[...prev,imagePreviews[index].image_id]);   
         }
         URL.revokeObjectURL(imagePreviews[index]);
@@ -284,7 +278,6 @@ const EditBlog = () => {
         return errors;
     };
 const handleSubmit = async (e,athu) => {
-    console.log(athu);
     e.preventDefault();
     const validationErrors = validateForm();
     
@@ -297,7 +290,6 @@ const handleSubmit = async (e,athu) => {
     setError('');
     setSuccessMessage('');
 
-    console.log(delete_image_id,imagePreviews);
 
     try {
         await axios.put(`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog.blog_id}`, {

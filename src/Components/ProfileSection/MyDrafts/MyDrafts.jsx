@@ -10,7 +10,6 @@ const MyDrafts=()=>{
     const {loading,  userId}=useUser();
     const [Drafts,setDrafts]=useState([]);
     useEffect(()=>{
-        console.log(loading);
         if(!userId){
             return;
         };
@@ -19,7 +18,6 @@ const MyDrafts=()=>{
                 const API="https://recipepedia-blog-backend.onrender.com/api/users/drafts";
                 const response=await axios.get(API,{params:{userId}});
                 setDrafts(response.data.drafts);
-                console.log(response);
             }
             catch(error){
                 return alert("Error occurred ",error);

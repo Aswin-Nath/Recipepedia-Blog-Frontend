@@ -17,7 +17,6 @@ const Comments = ({ blog_id, user_id }) => {
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
-  console.log(blog_id,userId);
 
   const handleReport = (comment_id) => {
     setCurrentCommentId(comment_id); // Store the comment ID being reported
@@ -28,7 +27,6 @@ const Comments = ({ blog_id, user_id }) => {
   const handleDelete = async (comment_id) => {
     // Add your delete logic here
     const API=`https://recipepedia-blog-backend.onrender.com/api/delete/comments/${comment_id}`;
-    console.log(comment_id,"COMMENT_ID");
     try{
       await axios.delete(API);
     }
@@ -242,7 +240,6 @@ const Comments = ({ blog_id, user_id }) => {
       try {
         const response = await axios.get(API, { params: { blog_id } });
         const commentsData = response.data.message;
-        console.log(commentsData);
         let temParentData = [];
         let temParent_to_child = new Map();
 
@@ -277,7 +274,6 @@ const Comments = ({ blog_id, user_id }) => {
       try {
         const response = await axios.get(API, { params: { blog_id } });
         const commentsData = response.data.message;
-        console.log(commentsData);
         let temParentData = [];
         let temParent_to_child = new Map();
 

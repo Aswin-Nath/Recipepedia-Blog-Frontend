@@ -21,7 +21,6 @@ const ViewUsers=()=>{
             try {
                 const response = await axios.get(API, { params: { userId } });
                 setBlogs(response.data.blogs);
-                console.log(response.data.blogs);
             }
             catch (error) {
                 console.log("Error occured", error);

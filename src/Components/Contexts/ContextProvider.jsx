@@ -32,7 +32,6 @@
         const decoded = jwtDecode(token);
         setUserId(decoded.user_id);
         localStorage.setItem("type",decoded.type);
-        console.log(decoded.type,decoded.type=="admin");
         if(decoded.type=="admin"){
           navigate("/admin");
         }
