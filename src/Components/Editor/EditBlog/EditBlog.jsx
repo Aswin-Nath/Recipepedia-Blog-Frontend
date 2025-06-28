@@ -152,7 +152,7 @@ const EditBlog = () => {
     },[image_urls])
 
     const handleIngredientsChange = (e) => {
-        const ingredients = e.target.value.split(',').map(item => item.trim()).filter(Boolean);
+        const ingredients = e.target.value;
         setFormData(prev => ({ ...prev, ingredients }));
     };
 
@@ -296,7 +296,7 @@ const handleSubmit = async (e,athu) => {
             title: formData.title.trim(),
             content: formData.content.trim(),
             difficulty: formData.difficulty,
-            ingredients: formData.ingredients,
+            ingredients: formData.ingredients.split(","),
             categories: formData.categories,
             status:athu
         });
@@ -393,7 +393,7 @@ const handleSubmit = async (e,athu) => {
                         variant="outlined"
                         multiline
                         rows={3}
-                        value={formData.ingredients.join(', ')}
+                        value={formData.ingredients}
                         onChange={handleIngredientsChange}
                         className="form-field"
                         helperText="Enter ingredients separated by commas"

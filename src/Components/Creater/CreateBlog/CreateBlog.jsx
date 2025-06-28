@@ -126,7 +126,7 @@ const CreateBlog = () => {
     }, [imagePreviews]);
 
     const handleIngredientsChange = (e) => {
-        const ingredients = e.target.value.split(',').map(item => item.trim()).filter(Boolean);
+        const ingredients = e.target.value;
         setFormData(prev => ({ ...prev, ingredients }));
     };
 const [videoUrl, setVideoUrl] = useState('');
@@ -263,7 +263,7 @@ const removeVideo = () => {
                 content: formData.content.trim(),
                 user_id: userId,
                 difficulty: formData.difficulty,
-                ingredients: formData.ingredients,
+                ingredients: formData.ingredients.split(","),
                 categories: formData.categories,
                 type:postType
             },{
@@ -342,7 +342,7 @@ const removeVideo = () => {
                         variant="outlined"
                         multiline
                         rows={3}
-                        value={formData.ingredients.join(', ')}
+                        value={formData.ingredients}
                         onChange={handleIngredientsChange}
                         className="form-field"
                         helperText="Enter ingredients separated by commas"
