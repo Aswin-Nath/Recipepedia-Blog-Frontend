@@ -63,7 +63,13 @@ const CreateBlog = () => {
             content: formData.content.trim(),
             user_id: userId,
             difficulty: formData.difficulty,
-            ingredients: formData.ingredients,
+            ingredients: Array.isArray(formData.ingredients)
+            ? formData.ingredients
+            : (typeof formData.ingredients === "string"
+                ? (formData.ingredients.includes(",")
+                    ? formData.ingredients.split(",").map(i => i.trim()).filter(i => i)
+                    : formData.ingredients.trim() ? [formData.ingredients.trim()] : [])
+                : []),
             categories: formData.categories,
             type:"Hold",
         },{

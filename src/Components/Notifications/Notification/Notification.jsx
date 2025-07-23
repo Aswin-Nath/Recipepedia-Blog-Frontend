@@ -32,7 +32,7 @@ const Notification = () => {
     });
     const ReFetch = () => fetchNotifications();
     socket.on("notify", ReFetch);
-
+    
     return () => {
       socket.off("connected");
       socket.off("disconnect");
@@ -60,6 +60,9 @@ const Notification = () => {
     }
   };
 
+  // Count unread notifications
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
   const renderNotification = (n) => (
     <div
       key={n.type + "-" + n.notification_id}
@@ -67,15 +70,16 @@ const Notification = () => {
       onClick={() => !n.is_read && markAsRead(n)}
       style={{
         cursor: n.is_read ? "default" : "pointer",
-        background: n.is_read ? "#f3f3f3" : "#e0f7fa",
-        borderLeft: n.is_read ? "4px solid #bbb" : "4px solid #00796b",
+        background: n.is_read ? "#f3f3f3" : "#e53935", // More indicative red for unread
+        borderLeft: n.is_read ? "4px solid #bbb" : "4px solid #e53935",
         marginBottom: "10px",
         padding: "12px 18px",
         borderRadius: "6px",
         transition: "background 0.2s",
+        position: "relative"
       }}
     >
-      <div style={{ fontWeight: n.is_read ? 400 : 600 }}>
+      <div style={{ fontWeight: n.is_read ? 400 : 700 }}>
         {n.type === "blog"
           ? `Blog Notification for Blog #${n.blog_id}`
           : n.type === "comment"
@@ -90,8 +94,21 @@ const Notification = () => {
       {!n.is_read && (
         <span
           className="new-badge"
+          style={{
+            background: "#fff",
+            color: "#e53935",
+            border: "2px solid #e53935",
+            borderRadius: "12px",
+            padding: "2px 10px",
+            fontWeight: 700,
+            fontSize: "0.85em",
+            position: "absolute",
+            top: 10,
+            right: 10,
+            boxShadow: "0 0 4px #e53935"
+          }}
         >
-          New
+          NEW
         </span>
       )}
     </div>
@@ -99,7 +116,31 @@ const Notification = () => {
 
   return (
     <div style={{ maxWidth: 500, margin: "0 auto", padding: 24 }}>
-      <h2 style={{ marginBottom: 18 }}>Notifications</h2>
+      <h2 style={{ marginBottom: 18, position: "relative", display: "inline-block" }}>
+        Notifications
+        {unreadCount > 0 && (
+          <span
+            style={{
+              background: "#e53935",
+              color: "#fff",
+              borderRadius: "50%",
+              padding: "4px 10px",
+              fontSize: "0.9em",
+              fontWeight: 700,
+              marginLeft: 10,
+              position: "absolute",
+              top: "-8px",
+              right: "-30px",
+              minWidth: 24,
+              textAlign: "center",
+              boxShadow: "0 0 0 2px #fff"
+            }}
+            aria-label={`${unreadCount} unread notifications`}
+          >
+            {unreadCount}
+          </span>
+        )}
+      </h2>
       {Loading ? (
         <div>Loading...</div>
       ) : notifications.length === 0 ? (
