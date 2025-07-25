@@ -99,7 +99,8 @@ const EditBlog = () => {
                 const API=`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
                 const response=await axios.get(API);
                 setBlog(response.data.blog[0]);
-                if(response.data.blog[0].status=="Hold"){
+                console.log(response.data.blog[0]);
+                if(response.data.blog.status=="Hold"){
                     const time_date_response=await axios.get("https://recipepedia-blog-backend.onrender.com/api/get/scheduled_time",{params:{blog_id}});
                     setdate(time_date_response.data.date);
                     settime(time_date_response.data.time);
@@ -292,8 +293,9 @@ const handleSubmit = async (e,athu) => {
 
 
     try {
-
-        await axios.put(`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog.blog_id}`, {
+        const API1="http://127.0.0.1:5000/api/blogs/";
+        const API2="https://recipepedia-blog-backend.onrender.com/api/blogs/";
+        await axios.put(`${API2}${blog.blog_id}`, {
             title: formData.title.trim(),
             content: formData.content.trim(),
             difficulty: formData.difficulty,
@@ -305,7 +307,8 @@ const handleSubmit = async (e,athu) => {
                         : formData.ingredients.trim() ? [formData.ingredients.trim()] : [])
                     : []),
             categories: formData.categories,
-            status: athu
+            status: athu,
+            userId
         });
 
         let imageUrls = [];

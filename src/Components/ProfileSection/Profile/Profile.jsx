@@ -23,9 +23,9 @@ const Profile = () => {
     if (loading || !userId) return;
 
     const fetchBlogs = async () => {
-      const API = "https://recipepedia-blog-backend.onrender.com/api/users/blogs";
-      // const API = "http://127.0.0.1:5000/api/users/blogs";
-      const res = await axios.get(API, { params: { userId } });
+      const API1 = "https://recipepedia-blog-backend.onrender.com/api/users/blogs";
+      const API2 = "http://127.0.0.1:5000/api/users/blogs";
+      const res = await axios.get(API1, { params: { userId } });
       setBlogs(res.data.blogs || []);
     };
 

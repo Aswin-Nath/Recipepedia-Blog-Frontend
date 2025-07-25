@@ -47,7 +47,7 @@ const Notification = () => {
   // Mark notification as read using the /read API (works for all types)
   const markAsRead = async (notification) => {
     try {
-      await axios.put("https://recipepedia-blog-backend.onrender.com/api/notifications/read", { notificationId: notification.notification_id });
+      await axios.put("https://recipepedia-blog-backend.onrender.com/api/notifications/read", { notificationId: notification.notification_id,userId });
       setNotifications((prev) =>
         prev.map((n) =>
           n.notification_id === notification.notification_id

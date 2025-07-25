@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./Comment.css";
 import { useUser } from "../Contexts/ContextProvider";
 
-const Comments = ({ blog_id, user_id }) => {
+const Comments = ({ blog_id, ownerId }) => {
   const {userId}=useUser();
   const [ParentData, setParentData] = useState([]);
   const [Parent_to_child, setParent_to_child] = useState(new Map());
@@ -209,15 +209,17 @@ const Comments = ({ blog_id, user_id }) => {
     if (!current_addcomment) {
       return alert("comment should contain at least 3 characters");
     }
-    const API = "https://recipepedia-blog-backend.onrender.com/api/add/comment";
+    const API1 = "https://recipepedia-blog-backend.onrender.com/api/add/comment";
+    const API2 = "http://127.0.0.1:5000/api/add/comment";
     try {
       const result = await axios.post(
-        API,
+        API1,
         {
           blog_id,
           userId,
           content: current_addcomment,
           parent_id,
+          ownerId
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -270,10 +272,13 @@ const Comments = ({ blog_id, user_id }) => {
     
   useEffect(() => {
     const fetchComments = async () => {
-      const API = `https://recipepedia-blog-backend.onrender.com/api/get/${blog_id}/comment`;
+      const API1 = `https://recipepedia-blog-backend.onrender.com/api/get/${blog_id}/comment`;
+      const API2 = `http://127.0.0.1:5000/api/get/${blog_id}/comment`;
+
       try {
-        const response = await axios.get(API, { params: { blog_id } });
+        const response = await axios.get(API1, { params: { blog_id } });
         const commentsData = response.data.message;
+        console.log("Oombey",commentsData);
         let temParentData = [];
         let temParent_to_child = new Map();
 

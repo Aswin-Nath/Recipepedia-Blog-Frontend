@@ -64,8 +64,9 @@ const IndividualBlogDisplayer = () => {
   // Fetch blog details
   useEffect(() => {
     const fetchBlog = async () => {
-      const API = `http://127.0.0.1:5000/api/blogs/${blog_id}`;
-      const response = await axios.get(API);
+      const API1 = `http://127.0.0.1:5000/api/blogs/${blog_id}`;
+      const API2 = `https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
+      const response = await axios.get(API2);
       setblog(response.data.blog);
       setReadtime(Math.ceil(response.data.blog.content.split(" ").length / averageWPM));
       setload(false);
@@ -79,10 +80,10 @@ const IndividualBlogDisplayer = () => {
     // Fetch like status
     useEffect(() => {
       if (loading) return;
-      const API = "http://127.0.0.1:5000/api/get/blogs/likes";
+      const API = "https://recipepedia-blog-backend.onrender.com/api/get/blogs/like_status";
       const fetchLikeStatus = async () => {
         try {
-          const response = await axios.post(API, { userId, blog_id });
+          const response = await axios.get(API, { params:{userId, blog_id} });
           setInitial_liked(response.data.status==0?false:true);
           setlike_status(response.data.status);
         } catch (error) {
@@ -90,7 +91,7 @@ const IndividualBlogDisplayer = () => {
         }
       };
       const fetchLikeCount = async () => {
-        const API = "http://127.0.0.1:5000/api/get/blogs/likes_count";
+        const API = "https://recipepedia-blog-backend.onrender.com/api/get/blogs/likes_count";
         try {
           const response = await axios.get(API, {
             params: {
@@ -120,9 +121,9 @@ const IndividualBlogDisplayer = () => {
     const data = { userId, blog_id: parseInt(blog_id), newLikeStatus };
     try {
       if (initially_liked) {
-        await axios.put("http://127.0.0.1:5000/api/edit/blogs/likes/", data);
+        await axios.put("https://recipepedia-blog-backend.onrender.com/api/edit/blogs/likes/", data);
       } else {
-        await axios.post("http://127.0.0.1:5000/api/add/blogs/likes/", data);
+        await axios.post("https://recipepedia-blog-backend.onrender.com/api/add/blogs/likes/", data);
         setInitial_liked(true);
       }
     } catch (error) {
@@ -136,7 +137,7 @@ const IndividualBlogDisplayer = () => {
   // Bookmarks: Check status on mount/user/blog change
   useEffect(() => {
     if (!userId || !blog_id) return;
-    const API = "http://127.0.0.1:5000/api/bookmark-checker";
+    const API = "https://recipepedia-blog-backend.onrender.com/api/bookmark-checker";
     axios
       .get(API, { params: { user_id: userId, blog_id } })
       .then((res) => {
@@ -163,7 +164,7 @@ const IndividualBlogDisplayer = () => {
         blog_id: blog_id,
         condition: bookmarked
       };
-      const API = "http://127.0.0.1:5000/api/add/bookmark";
+      const API = "https://recipepedia-blog-backend.onrender.com/api/add/bookmark";
       try {
         await axios.post(API, data, {
           headers: { "Content-Type": "application/json" }
@@ -226,7 +227,7 @@ const IndividualBlogDisplayer = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const API = `http://127.0.0.1:5000/api/get/blogs/videos/${blog_id}`;
+        const API = `https://recipepedia-blog-backend.onrender.com/api/get/blogs/videos/${blog_id}`;
         const response = await axios.get(API);
         setvideo_url(response.data.video_url);
       } catch (error) {
@@ -243,7 +244,7 @@ const IndividualBlogDisplayer = () => {
     }
     setIsDeleting(true);
     try {
-      await axios.delete(`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`);
+      await axios.delete(`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`,{data:{userId}});
       navigate('/');
     } catch (error) {
       console.error("Error deleting blog:", error);
@@ -548,7 +549,7 @@ const IndividualBlogDisplayer = () => {
               }
             </div>
           </div>
-          <Comment blog_id={blog_id} user_id={user_id} />
+          <Comment blog_id={blog_id} ownerId={user_id} />
         </div>
       </div>
     </div>
