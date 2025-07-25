@@ -66,8 +66,8 @@ const IndividualBlogDisplayer = () => {
     const fetchBlog = async () => {
       const API = `http://127.0.0.1:5000/api/blogs/${blog_id}`;
       const response = await axios.get(API);
-      setblog(response.data.blog[0]);
-      setReadtime(Math.ceil(response.data.blog[0].content.split(/\s+/).length / averageWPM));
+      setblog(response.data.blog);
+      setReadtime(Math.ceil(response.data.blog.content.split(" ").length / averageWPM));
       setload(false);
     };
 
