@@ -27,6 +27,7 @@ const Login = () => {
             alert("provide all the details");
             return ;
         }
+        // const API="http://127.0.0.1:5000/api/login"
         const API="https://recipepedia-blog-backend.onrender.com/api/login";
         const data={    
             "detail":user_detail,

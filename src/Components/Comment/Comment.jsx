@@ -2,9 +2,11 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import "./Comment.css";
 import { useUser } from "../Contexts/ContextProvider";
+import { useNavigate } from "react-router-dom";
 
 const Comments = ({ blog_id, ownerId }) => {
-  const {userId}=useUser();
+  const navigate=useNavigate();
+  const {userId,userName}=useUser();
   const [ParentData, setParentData] = useState([]);
   const [Parent_to_child, setParent_to_child] = useState(new Map());
   const [addcomment, setaddcomment] = useState("");
@@ -14,9 +16,6 @@ const Comments = ({ blog_id, ownerId }) => {
   const [reportReason, setReportReason] = useState("");
   const [currentCommentId, setCurrentCommentId] = useState(null);
 
-  const toggleMenu = () => {
-    setShowMenu(!showMenu);
-  };
 
   const handleReport = (comment_id) => {
     setCurrentCommentId(comment_id); // Store the comment ID being reported
@@ -27,6 +26,7 @@ const Comments = ({ blog_id, ownerId }) => {
   const handleDelete = async (comment_id) => {
     // Add your delete logic here
     const API=`https://recipepedia-blog-backend.onrender.com/api/delete/comments/${comment_id}`;
+    // const API=`http://127.0.0.1:5000/api/delete/comments/${comment_id}/${blog_id}`;
     try{
       await axios.delete(API);
     }
@@ -81,7 +81,11 @@ const Comments = ({ blog_id, ownerId }) => {
     setExpandedReplies,
     handleReport,
   }) => {
+    const [showMenu, setShowMenu] = useState(false);
     const CommentContent = comment.content;
+    const toggleMenu = () => {
+      setShowMenu(!showMenu);
+    };
     const likes = comment.likes;
     const child_array = Parent_to_child.get(comment.comment_id);
     const time = comment.time;
@@ -107,16 +111,25 @@ const Comments = ({ blog_id, ownerId }) => {
       <div className="individual-comments">
         <div className="comment-header">
           <div className="comment-user">
-            <div className="user-avatar">
-              {/* You can add user avatar here if available */}
+            <div
+              className="user-avatar"
+              onClick={() => navigate(`/user/${comment.user_id}-${comment.user_name}`)}
+            >
+              {comment.profile_url ? (
+                <img src={comment.profile_url} alt={comment.user_name} />
+              ) : (
+                comment.user_name?.charAt(0).toUpperCase() || "?"
+              )}
             </div>
-            <div className="user-info">
-              <h4>{comment.username || "User"}</h4>
+
+            <div className="user-info" onClick={() => navigate(`/user/${comment.user_id}-${comment.user_name}`)}>
+              <h4>{comment.user_name || "User"}</h4>
               <span className="comment-date">
                 Created on {Date} at {time}
               </span>
             </div>
           </div>
+
           <div className="comment-menu">
             <span className="menu-dots" onClick={toggleMenu}>
               •••
@@ -219,7 +232,8 @@ const Comments = ({ blog_id, ownerId }) => {
           userId,
           content: current_addcomment,
           parent_id,
-          ownerId
+          ownerId,
+          userName
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -238,6 +252,7 @@ const Comments = ({ blog_id, ownerId }) => {
   };
 
   const fetchComments = async () => {
+    // const API=`http://127.0.0.1:5000/api/get/${blog_id}/comment`;
       const API = `https://recipepedia-blog-backend.onrender.com/api/get/${blog_id}/comment`;
       try {
         const response = await axios.get(API, { params: { blog_id } });

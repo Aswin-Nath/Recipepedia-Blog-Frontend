@@ -27,7 +27,7 @@ const LoadingSpinner = () => (
 );
 
 const IndividualBlogDisplayer = () => {
-  const { userId, loading } = useUser();
+  const { userId, loading,userName } = useUser();
   const { blog_id } = useParams();
 
   const [image_urls, setimage_url] = useState([]);
@@ -92,6 +92,7 @@ const IndividualBlogDisplayer = () => {
       };
       const fetchLikeCount = async () => {
         const API = "https://recipepedia-blog-backend.onrender.com/api/get/blogs/likes_count";
+        // const API="http://127.0.0.1:5000/api/get/blogs/likes_count";
         try {
           const response = await axios.get(API, {
             params: {
@@ -101,7 +102,7 @@ const IndividualBlogDisplayer = () => {
           });
           const count = response.data.count;
           console.log(count);
-          setlike_count(count); // Assuming you have a useState like: const [likeCount, setLikeCount] = useState(0);
+          setlike_count(response.data.count); // Assuming you have a useState like: const [likeCount, setLikeCount] = useState(0);
         } catch (error) {
           console.log("Error occurred while fetching like count:", error);
         }
@@ -121,7 +122,9 @@ const IndividualBlogDisplayer = () => {
     const data = { userId, blog_id: parseInt(blog_id), newLikeStatus };
     try {
       if (initially_liked) {
-        await axios.put("https://recipepedia-blog-backend.onrender.com/api/edit/blogs/likes/", data);
+        // const API="http://127.0.0.1:5000/api/edit/blogs/likes/";
+        const API="https://recipepedia-blog-backend.onrender.com/api/edit/blogs/likes/";
+        await axios.put(API, data);
       } else {
         await axios.post("https://recipepedia-blog-backend.onrender.com/api/add/blogs/likes/", data);
         setInitial_liked(true);

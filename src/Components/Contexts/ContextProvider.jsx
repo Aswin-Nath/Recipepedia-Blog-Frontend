@@ -7,6 +7,7 @@
     const navigate=useNavigate();
     const [userId, setUserId] = useState(null);
     const [loading, setLoading] = useState(true); 
+    const [userName,setuserName]=useState("");
     useEffect(() => {
       const token = localStorage.getItem("token");
       if (token) {
@@ -14,6 +15,7 @@
           const decoded = jwtDecode(token);
           if (decoded.exp > Date.now() / 1000) {
             setUserId(decoded.user_id);
+            setuserName(decoded.user_name);
             localStorage.setItem("type",decoded.type);
           } else {
             localStorage.removeItem("token");
@@ -31,6 +33,7 @@
         localStorage.setItem("token", token);
         const decoded = jwtDecode(token);
         setUserId(decoded.user_id);
+        setuserName(decoded.user_name);
         localStorage.setItem("type",decoded.type);
         if(decoded.type=="admin"){
           navigate("/admin");
@@ -55,7 +58,7 @@
     };
 
     return (
-      <UserContext.Provider value={{ userId, setUserId, loading,logout,login }}>
+      <UserContext.Provider value={{ userId, setUserId,userName,setuserName, loading,logout,login }}>
         {children}
       </UserContext.Provider>
     );

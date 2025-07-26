@@ -376,3 +376,58 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+.comment-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  overflow: hidden;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-info {
+  cursor: pointer;
+}
+
+.user-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  transition: text-decoration 0.2s;
+}
+
+.user-info h4:hover {
+  text-decoration: underline;
+}
+
+.comment-date {
+  font-size: 13px;
+  color: #777;
+}
+
