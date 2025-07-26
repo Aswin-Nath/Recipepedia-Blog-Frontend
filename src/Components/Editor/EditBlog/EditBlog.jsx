@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { data, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import CreateBlogNavbar from "../../Navbars/CreateBlogNavbar/CreateBlogNavbar";
+import Avatar from '@mui/material/Avatar'; // Add at the top if not present
+
 import { 
     TextField, 
     Button, 
@@ -37,7 +39,48 @@ const EditBlog = () => {
     const [scheduledDate, setScheduledDate] = useState('');
     const [scheduledTime, setScheduledTime] = useState('');
     const [type,settype]=useState("Draft");
-    
+
+    // Add these states near your other useState hooks:
+    const [mentions, setMentions] = useState([]);
+    const [mentionQuery, setMentionQuery] = useState('');
+    const [userSuggestions, setUserSuggestions] = useState([]);
+    const [isMentionInputFocused, setIsMentionInputFocused] = useState(false);
+
+    // Fetch users for mentions
+    const fetchUsers = async (query) => {
+        if (!query) return [];
+        try {
+            const API=`http://127.0.0.1:5000/api/users/search?q=${query}`;
+            const res = await axios.get(API);
+            console.log(res.data.users);
+            return res.data.users || [];
+        } catch {
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        let active = true;
+        if (mentionQuery.trim() === '') {
+            setUserSuggestions([]);
+            return;
+        }
+        fetchUsers(mentionQuery).then(users => {
+            if (active) setUserSuggestions(users.filter(u => !mentions.some(m => m.id === u.id)));
+        });
+        return () => { active = false; };
+    }, [mentionQuery, mentions]);
+
+    const handleAddMention = (user) => {
+        setMentions(prev => [...prev, user]);
+        setMentionQuery('');
+        setUserSuggestions([]);
+    };
+
+    const handleRemoveMention = (userId) => {
+        setMentions(prev => prev.filter(u => u.id !== userId));
+    };
+
         const handleScheduleClick = () => {
             setShowScheduleFields((prev) => !prev);
         };
@@ -96,10 +139,14 @@ const EditBlog = () => {
     useEffect(()=>{
         const fetchBlogData=async ()=>{
             try{
-                const API=`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
-                const response=await axios.get(API);
-                setBlog(response.data.blog[0]);
-                console.log(response.data.blog[0]);
+
+                const API1=`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
+                const API2=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
+                const response=await axios.get(API2);
+                setBlog(response.data.blog);
+                console.log(response.data.blog);
+                console.log(response.data.mentions);
+                setMentions(response.data.mentions);
                 if(response.data.blog.status=="Hold"){
                     const time_date_response=await axios.get("https://recipepedia-blog-backend.onrender.com/api/get/scheduled_time",{params:{blog_id}});
                     setdate(time_date_response.data.date);
@@ -295,7 +342,7 @@ const handleSubmit = async (e,athu) => {
     try {
         const API1="http://127.0.0.1:5000/api/blogs/";
         const API2="https://recipepedia-blog-backend.onrender.com/api/blogs/";
-        await axios.put(`${API2}${blog.blog_id}`, {
+        await axios.put(`${API1}${blog.blog_id}`, {
             title: formData.title.trim(),
             content: formData.content.trim(),
             difficulty: formData.difficulty,
@@ -308,7 +355,7 @@ const handleSubmit = async (e,athu) => {
                     : []),
             categories: formData.categories,
             status: athu,
-            userId
+            userId,mentions
         });
 
         let imageUrls = [];
@@ -540,6 +587,77 @@ const handleSubmit = async (e,athu) => {
                         className="form-field"
                         error={!formData.content && error}
                     />
+
+                                        {/* Mentions Section */}
+                    <div className="mentions-section" style={{ marginTop: 24, marginBottom: 16 }}>
+                        <Typography variant="subtitle1" sx={{ mb: 1 }}>Mentions</Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                            {mentions.length === 0 && (
+                                <Typography variant="body2" color="text.secondary">No mentions yet.</Typography>
+                            )}
+                            {mentions.map(user => (
+                                <Chip
+                                    key={user.id}
+                                    avatar={<Avatar src={user.avatar} />}
+                                    label={user.name}
+                                    onDelete={() => handleRemoveMention(user.id)}
+                                    sx={{ mb: 1 }}
+                                />
+                            ))}
+                        </Box>
+                        <Typography variant="subtitle2" sx={{ mb: 1 }}>Add Mentions</Typography>
+                        <Box sx={{ position: 'relative', width: '100%' }}>
+                            <TextField
+                                fullWidth
+                                placeholder="Type to search users to mention..."
+                                value={mentionQuery}
+                                onChange={e => setMentionQuery(e.target.value)}
+                                onFocus={() => setIsMentionInputFocused(true)}
+                                onBlur={() => setTimeout(() => setIsMentionInputFocused(false), 200)}
+                                size="small"
+                                onKeyDown={e => {
+                                    if (
+                                        e.key === 'Enter' &&
+                                        userSuggestions.length > 0
+                                    ) {
+                                        e.preventDefault();
+                                        handleAddMention(userSuggestions[0]);
+                                    }
+                                }}
+                            />
+                            {userSuggestions.length > 0 && (
+                                <Box sx={{
+                                    border: '1px solid #ccc',
+                                    borderRadius: 1,
+                                    mt: 1,
+                                    maxHeight: 200,
+                                    overflowY: 'auto',
+                                    bgcolor: 'background.paper',
+                                    zIndex: 10,
+                                    position: 'absolute',
+                                    width: '100%'
+                                }}>
+                                    {userSuggestions.map(user => (
+                                        <Box
+                                            key={user.id}
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                px: 1,
+                                                py: 1,
+                                                cursor: 'pointer',
+                                                '&:hover': { bgcolor: '#f5f5f5' }
+                                            }}
+                                            onMouseDown={() => handleAddMention(user)}
+                                        >
+                                            <Avatar src={user.avatar} sx={{ width: 24, height: 24, mr: 1 }} />
+                                            <Typography variant="body2">{user.name}</Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            )}
+                        </Box>
+                    </div>
 
                     {error && <Alert severity="error" className="alert">{error}</Alert>}
                     {successMessage && <Alert severity="success" className="alert">{successMessage}</Alert>}

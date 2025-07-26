@@ -5,6 +5,22 @@ import Navbar from "../../Navbars/Navbar/Navbar";
 import Comment from "../../Comment/Comment";
 import axios from "axios";
 import { useUser } from "../../Contexts/ContextProvider";
+import Avatar from '@mui/material/Avatar'; // Add at the top if not present
+import { 
+    TextField, 
+    Button, 
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Chip,
+    CircularProgress,
+    Alert,
+    LinearProgress,
+    Typography,
+    IconButton,
+    Box,
+} from '@mui/material';
 const LoadingSpinner = () => (
   <div style={{
     display: 'flex',
@@ -29,7 +45,6 @@ const LoadingSpinner = () => (
 const IndividualBlogDisplayer = () => {
   const { userId, loading,userName } = useUser();
   const { blog_id } = useParams();
-
   const [image_urls, setimage_url] = useState([]);
   const [video_url, setvideo_url] = useState("");
   const [blog, setblog] = useState({});
@@ -62,12 +77,14 @@ const IndividualBlogDisplayer = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch blog details
+  const [mentions,setmentions]=useState([]);
   useEffect(() => {
     const fetchBlog = async () => {
       const API1 = `http://127.0.0.1:5000/api/blogs/${blog_id}`;
       const API2 = `https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
-      const response = await axios.get(API2);
+      const response = await axios.get(API1);
       setblog(response.data.blog);
+      setmentions(response.data.mentions);
       setReadtime(Math.ceil(response.data.blog.content.split(" ").length / averageWPM));
       setload(false);
     };
@@ -541,6 +558,23 @@ const IndividualBlogDisplayer = () => {
               ))}
             </div>
           </div>
+          {mentions.length>0 && (
+            <div className="mentions-section" style={{ marginTop: 24, marginBottom: 16 }}>
+              <Typography variant="subtitle1" sx={{ mb: 1 }}>Mentions</Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}> 
+                  {mentions.map(user => (
+                      <Chip
+                          key={user.id}
+                          avatar={<Avatar src={user.avatar} />}
+                          label={user.name}
+                          onClick={()=>{ navigate(`/user/${user.id}-${user.name}`)}}
+                          sx={{ mb: 1 }}
+                      />
+                  ))}
+              </Box>
+          </div>
+          )}
+            
           <div className="blog-categories">
             <h3>Categories:</h3>
             <div className="categories-tags">
