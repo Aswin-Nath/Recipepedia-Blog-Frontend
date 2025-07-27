@@ -7,7 +7,7 @@ import axios from "axios";
 import socket from "../../Sockets/SocketConnect";
 
 const Navbar = () => {
-    const { userId, logout, setUserId } = useUser();
+    const { userId,logout, setUserId } = useUser();
     const navigate = useNavigate();
     const [show, setshow] = useState(0);
     const [openNotification, setNotification] = useState(false);
@@ -173,10 +173,8 @@ const Navbar = () => {
                 <div className="profile-menu-item">
                     <i className="fas fa-sign-out-alt"></i>
                     <span onClick={() => {
+                        logout();
                         navigate("/login");
-                        // logout();
-                        localStorage.removeItem("token");
-                        setUserId(null);
                     }}>
                         Log out
                     </span>

@@ -20,6 +20,7 @@ import Network from './Components/NetworkPage/Network/Network';
 import ViewUsers from './Components/ViewUsers/ViewUsers/ViewUsers';
 
 import ProtectedRoute from './Components/Auth/ProtectedRoute';
+import Explore from './Components/Explore/Explore';
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/blog/:blog_id/:blog_title" element={<IndividualBlogDisplayer />} />
-
+          <Route path="/Explore" element={<Explore/>}/>
           {/* Protected Routes */}
           <Route path="/draft/:blog_id" element={<ProtectedRoute><IndividualDraftDisplayer /></ProtectedRoute>} />
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
