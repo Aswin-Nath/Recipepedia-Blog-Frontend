@@ -245,46 +245,51 @@ const Comments = ({ blog_id, ownerId }) => {
         setExpandedReplies((prev) => new Set(prev).add(parent_id));
       }
       setaddcomment("");
+      fetchComments();
     } catch (error) {
       console.error("Error occurred while adding the comment:", error);
       alert("Failed to add comment. Please try again.");
     }
   };
 
-  const fetchComments = async () => {
+const fetchComments = async () => {
     // const API=`http://127.0.0.1:5000/api/get/${blog_id}/comment`;
       const API = `https://recipepedia-blog-backend.onrender.com/api/get/${blog_id}/comment`;
-      try {
-        const response = await axios.get(API, { params: { blog_id } });
-        const commentsData = response.data.message;
-        let temParentData = [];
-        let temParent_to_child = new Map();
+  try {
+    const response = await axios.get(API, { params: { blog_id } });
+    const commentsData = response.data.message;
 
-        commentsData.forEach((currentComment) => {
-          const parent_id = currentComment.parent_id;
-          currentComment.date = currentComment.createdat.slice(0, 10);
-          currentComment.time = currentComment.createdat.slice(11, 16);
-          delete currentComment.createdat;
+    let temParentData = [];
+    let temParent_to_child = new Map();
 
-          if (currentComment.parent_id === currentComment.comment_id) {
-            temParentData.push(currentComment);
-          } else {
-            if (!temParent_to_child.has(parent_id)) {
-              temParent_to_child.set(parent_id, []);
-            }
-            temParent_to_child.get(parent_id).push(currentComment);
-          }
-        });
+    // Sort by createdat (newest first)
+    commentsData.sort((a, b) => new Date(b.createdat) - new Date(a.createdat));
+    console.log(commentsData,"comments");
+    commentsData.forEach((currentComment) => {
+      const parent_id = currentComment.parent_id;
+      currentComment.date = currentComment.createdat.slice(0, 10);
+      currentComment.time = currentComment.createdat.slice(11, 16);
+      delete currentComment.createdat;
 
-        setParentData(temParentData);
-        setParent_to_child(temParent_to_child);
-      } catch (error) {
-        throw new Error(
-          "Error occurred while fetching comments: " + error.message
-        );
+      if (parent_id === currentComment.comment_id) {
+        temParentData.push(currentComment);
+      } else {
+        if (!temParent_to_child.has(parent_id)) {
+          temParent_to_child.set(parent_id, []);
+        }
+        temParent_to_child.get(parent_id).push(currentComment);
       }
-    };
-    
+    });
+
+    setParentData(temParentData);
+    setParent_to_child(temParent_to_child);
+  } catch (error) {
+    throw new Error(
+      "Error occurred while fetching comments: " + error.message
+    );
+  }
+};
+
   useEffect(() => {
     const fetchComments = async () => {
       const API1 = `https://recipepedia-blog-backend.onrender.com/api/get/${blog_id}/comment`;

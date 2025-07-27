@@ -82,8 +82,9 @@ const IndividualBlogDisplayer = () => {
     const fetchBlog = async () => {
       const API1 = `http://127.0.0.1:5000/api/blogs/${blog_id}`;
       const API2 = `https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
-      const response = await axios.get(API1);
+      const response = await axios.get(API2);
       setblog(response.data.blog);
+      console.log(response.data.blog);
       setmentions(response.data.mentions);
       setReadtime(Math.ceil(response.data.blog.content.split(" ").length / averageWPM));
       setload(false);
@@ -103,6 +104,7 @@ const IndividualBlogDisplayer = () => {
           const response = await axios.get(API, { params:{userId, blog_id} });
           setInitial_liked(response.data.status==0?false:true);
           setlike_status(response.data.status);
+          console.log(like_status,like_count);
         } catch (error) {
           console.log("Error occured while getting like status", error);
         }
@@ -136,16 +138,11 @@ const IndividualBlogDisplayer = () => {
     const newLikeStatus = prevStatus === 1 ? 0 : 1;
     setlike_status(newLikeStatus); // Optimistic UI
 
-    const data = { userId, blog_id: parseInt(blog_id), newLikeStatus };
+    const data = { userId, blog_id: parseInt(blog_id) };
     try {
-      if (initially_liked) {
-        // const API="http://127.0.0.1:5000/api/edit/blogs/likes/";
-        const API="https://recipepedia-blog-backend.onrender.com/api/edit/blogs/likes/";
-        await axios.put(API, data);
-      } else {
-        await axios.post("https://recipepedia-blog-backend.onrender.com/api/add/blogs/likes/", data);
-        setInitial_liked(true);
-      }
+      const API1="http://127.0.0.1:5000/api/blogs/likes"
+      const API2="https://recipepedia-blog-backend.onrender.com/api/blogs/likes";
+        await axios.post(API2, data);
     } catch (error) {
       setlike_status(prevStatus); // rollback
       console.error("Error updating like:", error);

@@ -124,7 +124,7 @@ const CreateBlog = () => {
     const fetchUsers = async (query) => {
         if (!query) return [];
         try {
-            const API=`http://127.0.0.1:5000/api/users/search?q=${query}`;
+            const API=`https://recipepedia-blog-backend.onrender.com/api/users/search?q=${query}`;
             const res = await axios.get(API);
             console.log(res.data.users);
             return res.data.users || [];
@@ -308,7 +308,7 @@ const removeVideo = () => {
             }
             const API1="http://127.0.0.1:5000/api/blogs";
             const API2='https://recipepedia-blog-backend.onrender.com/api/blogs';
-            const blogResponse = await axios.post(API1, {
+            const blogResponse = await axios.post(API2, {
                 title: formData.title.trim(),
                 content: formData.content.trim(),
                 user_id: userId,

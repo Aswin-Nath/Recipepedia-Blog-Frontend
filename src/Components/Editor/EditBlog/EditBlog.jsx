@@ -50,8 +50,9 @@ const EditBlog = () => {
     const fetchUsers = async (query) => {
         if (!query) return [];
         try {
-            const API=`http://127.0.0.1:5000/api/users/search?q=${query}`;
-            const res = await axios.get(API);
+            const API1=`http://127.0.0.1:5000/api/users/search?q=${query}`;
+            const API2=`https://recipepedia-blog-backend.onrender.com/api/users/search?q=${query}`;
+            const res = await axios.get(API2);
             console.log(res.data.users);
             return res.data.users || [];
         } catch {
@@ -142,7 +143,7 @@ const EditBlog = () => {
 
                 const API1=`https://recipepedia-blog-backend.onrender.com/api/blogs/${blog_id}`;
                 const API2=`http://127.0.0.1:5000/api/blogs/${blog_id}`;
-                const response=await axios.get(API2);
+                const response=await axios.get(API1);
                 setBlog(response.data.blog);
                 console.log(response.data.blog);
                 console.log(response.data.mentions);
@@ -342,7 +343,7 @@ const handleSubmit = async (e,athu) => {
     try {
         const API1="http://127.0.0.1:5000/api/blogs/";
         const API2="https://recipepedia-blog-backend.onrender.com/api/blogs/";
-        await axios.put(`${API1}${blog.blog_id}`, {
+        await axios.put(`${API2}${blog.blog_id}`, {
             title: formData.title.trim(),
             content: formData.content.trim(),
             difficulty: formData.difficulty,
