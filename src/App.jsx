@@ -31,6 +31,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/blog/:blog_id/:blog_title" element={<IndividualBlogDisplayer />} />
           <Route path="/Explore" element={<Explore/>}/>
+          <Route path="/user/:user_slug" element={<ViewUsers/>} />
           {/* Protected Routes */}
           <Route path="/draft/:blog_id" element={<ProtectedRoute><IndividualDraftDisplayer /></ProtectedRoute>} />
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />

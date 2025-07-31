@@ -281,7 +281,8 @@ const IndividualBlogDisplayer = () => {
     ingredients,
     createdat,
     user_id,
-    difficulty
+    difficulty,
+    user_name
   } = blog;
 
   const difficultyLevel = difficulty;
@@ -289,7 +290,7 @@ const IndividualBlogDisplayer = () => {
   if (loading || pageloading) {
     return <LoadingSpinner />;
   }
-
+  
   return (
     <div>
       <Navbar />
@@ -299,6 +300,9 @@ const IndividualBlogDisplayer = () => {
             <h3>Read time {readTimeInMinutes} Minutes</h3>
             <h1 className="blog-title-caps">{title?.toUpperCase()}</h1>
             <div className="blog-header-right" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span className="blog-date" onClick={()=>{ navigate(`/user/${user_id}-${user_name}`)}}>
+                Blog by {user_name}
+              </span>
               <span className="blog-date">
                 {createdat ? new Date(createdat).toLocaleDateString() : ""}
               </span>
