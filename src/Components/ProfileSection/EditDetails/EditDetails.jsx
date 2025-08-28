@@ -72,7 +72,7 @@ const EditProfile = () => {
     imageFormData.append("image_name", `profile_${Date.now()}`);
 
     const response = await axios.post(
-      "https://image-upload-backend-v12y.onrender.com/upload-image",
+      "https://image-upload-backend-v12y.onrender.com/upload",
       imageFormData,
       {
         headers: { "Content-Type": "multipart/form-data" },

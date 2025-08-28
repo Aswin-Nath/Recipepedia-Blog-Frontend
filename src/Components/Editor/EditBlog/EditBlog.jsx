@@ -300,7 +300,7 @@ const EditBlog = () => {
 
             try {
                 const response = await axios.post(
-                    'https://image-upload-backend-v12y.onrender.com/upload-image',
+                    'https://image-upload-backend-v12y.onrender.com/upload',
                     imageFormData,
                     {
                         headers: { 'Content-Type': 'multipart/form-data' },
